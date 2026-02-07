@@ -55,10 +55,26 @@ P2_DISH_RECT = pygame.Rect(
 )
 
 FOOD_COLORS = {
+# FOOD IMAGES
+FOOD_IMAGES = {
+    "good": pygame.image.load(r"Food_Images\Vanlig.png").convert_alpha(),
+    "bad": pygame.image.load(r"Food_Images\Rotten_0003.png").convert_alpha(),
+    "spicy": pygame.image.load(r"Food_Images\Spicy.png").convert_alpha()
+}
+
+# Optional: scale them to 30x30 to match your old rectangle size
+for key in FOOD_IMAGES:
+    FOOD_IMAGES[key] = pygame.transform.scale(FOOD_IMAGES[key], (70, 70))
+
+
+
+
+
+"""FOOD_COLORS = {
     "good": (80, 220, 120),     # green
     "bad": (220, 80, 80),       # red
     "spicy": (200, 200, 200)      # gray
-}
+}"""
 
 MISS_PENALTY = {
     "good": 4,
@@ -277,6 +293,7 @@ while True:
 
     # LEGEND AND INFO
 
+    
     legend_p1 = [
         "PLAYER 1 (RED) - WASD",
         "W : Eat good food",
@@ -309,21 +326,26 @@ while True:
                 (WIDTH // 2 - 60, food_legend_y))
 
     food_info = [
-        ("Good food (Eat)", FOOD_COLORS["good"]),
-        ("Junk food (Pass)", FOOD_COLORS["bad"]),
-        ("Spicy food (Reject)", FOOD_COLORS["spicy"])
-    ]
+    ("Good food (Eat)", "good"),
+    ("Junk food (Pass)", "bad"),
+    ("Spicy food (Reject)", "spicy")
+]
 
-    for i, (label, color) in enumerate(food_info):
-        pygame.draw.rect(
-            screen, color,
-            (WIDTH // 2 - 80, food_legend_y + 30 + i * 22, 14, 14)
+    for i, (label, food_type) in enumerate(food_info):
+        icon = FOOD_IMAGES[food_type]
+
+        screen.blit(
+            pygame.transform.scale(icon, (20, 20)),
+            (WIDTH // 2 - 80, food_legend_y + 30 + i * 26)
         )
+
         screen.blit(
             legend_font.render(label, True, (230, 230, 230)),
-            (WIDTH // 2 - 60, food_legend_y + 28 + i * 22)
+            (WIDTH // 2 - 50, food_legend_y + 28 + i * 26)
         )
 
+
+        
     # SIZE TEXT
 
     screen.blit(font.render(str(p1_size), True, (255, 255, 255)), (160, 520))
