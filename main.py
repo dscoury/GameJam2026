@@ -69,6 +69,8 @@ timer = GAME_LENGTH
 running = True
 game_over = False
 
+# GAME LOOP
+
 while running:
     clock.tick(FPS)
     screen.fill((25, 25, 30))
@@ -80,12 +82,15 @@ while running:
 
     keys = pygame.key.get_pressed()
 
+    # SPAWNING
+
     if not game_over:
         spawn_timer += 1
         if spawn_timer >= spawn_delay:
             spawn_food()
             spawn_timer = 0
 
+    # UPDATE FOODS
 
     for food in foods[:]:
         food["rect"].y += food_speed
@@ -93,6 +98,8 @@ while running:
         in_zone = (
             TIMING_Y <= food["rect"].y <= TIMING_Y + TIMING_HEIGHT
         )
+
+        # PLAYER 1 INPUT
 
         if in_zone and food["lane"] == 1:
             if food["type"] == "good" and keys[pygame.K_w]:
@@ -104,6 +111,8 @@ while running:
 
             elif food["type"] == "raw" and keys[pygame.K_a]:
                 foods.remove(food)
+
+        # PLAYER 2 INPUT
 
         if in_zone and food["lane"] == 2:
             if food["type"] == "good" and keys[pygame.K_UP]:
@@ -234,3 +243,5 @@ while running:
         )
 
     pygame.display.flip()
+
+    
