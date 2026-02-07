@@ -198,9 +198,11 @@ while True:
         else:
             force = max(2, abs(p1_size - p2_size) // 10)
             if p1_size > p2_size:
+                # PLAYER 1 pushes PLAYER 2 to the RIGHT
                 p2_rect.x += force
             else:
-                p1_rect.x += force
+                # PLAYER 2 pushes PLAYER 1 to the LEFT
+                p1_rect.x -= force
 
         if p1_rect.right < 0 or p2_rect.left > WIDTH:
             state = "RESULT"
