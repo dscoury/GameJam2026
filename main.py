@@ -54,12 +54,35 @@ P2_DISH_RECT = pygame.Rect(
     40, 40
 )
 
-FOOD_COLORS = {
+# TABLE LAYOUT
+TABLE_RECT = pygame.Rect(100, 260, 600, 80)
+
+TRASH_LEFT_RECT = pygame.Rect(
+    TABLE_RECT.left - 40, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+TRASH_RIGHT_RECT = pygame.Rect(
+    TABLE_RECT.right + 10, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+WOMAN_RECT = pygame.Rect(
+    TABLE_RECT.centerx - 25, TABLE_RECT.bottom + 10, 50, 80)
+
+P1_DISH_RECT = pygame.Rect(
+    TABLE_RECT.left + 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
+P2_DISH_RECT = pygame.Rect(
+    TABLE_RECT.right - 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
 # FOOD IMAGES
 FOOD_IMAGES = {
-    "good": pygame.image.load(r"Food_Images\Vanlig.png").convert_alpha(),
-    "bad": pygame.image.load(r"Food_Images\Rotten_0003.png").convert_alpha(),
-    "spicy": pygame.image.load(r"Food_Images\Spicy.png").convert_alpha()
+    "good": pygame.image.load(r"Food_Images/Vanlig.png").convert_alpha(),
+    "bad": pygame.image.load(r"Food_Images/Rotten_0003.png").convert_alpha(),
+    "spicy": pygame.image.load(r"Food_Images/Spicy.png").convert_alpha()
 }
 
 # Optional: scale them to 30x30 to match your old rectangle size
@@ -257,19 +280,24 @@ while True:
 
         # PLAYER 1 DISH
         if p1_dish:
-            pygame.draw.rect(
-                BASE_SURFACE,
-                FOOD_COLORS[p1_dish],
-                P1_DISH_RECT
+            BASE_SURFACE.blit(
+                FOOD_IMAGES[p1_dish],
+                (
+                    P1_DISH_RECT.centerx - FOOD_IMAGES[p1_dish].get_width() // 2,
+                    P1_DISH_RECT.centery - FOOD_IMAGES[p1_dish].get_height() // 2
+                )
             )
 
         # PLAYER 2 DISH
         if p2_dish:
-            pygame.draw.rect(
-                BASE_SURFACE,
-                FOOD_COLORS[p2_dish],
-                P2_DISH_RECT
+            BASE_SURFACE.blit(
+                FOOD_IMAGES[p2_dish],
+                (
+                    P2_DISH_RECT.centerx - FOOD_IMAGES[p2_dish].get_width() // 2,
+                    P2_DISH_RECT.centery - FOOD_IMAGES[p2_dish].get_height() // 2
+                )
             )
+
 
     pygame.draw.rect(BASE_SURFACE, (200, 80, 80), p1_rect)
     pygame.draw.rect(BASE_SURFACE, (80, 80, 220), p2_rect)
