@@ -133,11 +133,14 @@ while True:
                     p1_size += 5
                     foods.remove(food)
 
-                elif food["type"] == "bad" and keys[pygame.K_d]:
+                elif food["type"] == "bad" and keys[pygame.K_a]:
+                # Trash is to the LEFT
                     foods.remove(food)
 
-                elif food["type"] == "raw" and keys[pygame.K_a]:
+                elif food["type"] == "raw" and keys[pygame.K_d]:
+                # Woman is towards the CENTER (right)
                     foods.remove(food)
+
 
             # PLAYER 2
 
@@ -147,10 +150,13 @@ while True:
                     foods.remove(food)
 
                 elif food["type"] == "bad" and keys[pygame.K_RIGHT]:
+                # Trash is to the RIGHT
                     foods.remove(food)
 
                 elif food["type"] == "raw" and keys[pygame.K_LEFT]:
+                # Woman is towards the CENTER (left)
                     foods.remove(food)
+
 
             # MISS PENALTY
 
@@ -313,5 +319,3 @@ while True:
         screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 20))
 
     pygame.display.flip()
-
-    
