@@ -125,6 +125,8 @@ while running:
             elif food["type"] == "raw" and keys[pygame.K_LEFT]:
                 foods.remove(food)
 
+        # PENALTY FOR MISSING FOOD
+
         if food in foods and food["rect"].y > TIMING_Y + TIMING_HEIGHT + 30:
             penalty = MISS_PENALTY[food["type"]]
 
@@ -135,6 +137,8 @@ while running:
 
             foods.remove(food)
     
+    # CLAMP SIZE
+
     p1_size = max(30, p1_size)
     p2_size = max(30, p2_size)
 
@@ -148,23 +152,31 @@ while running:
     p2_rect.centerx = LANES[2]
     p2_rect.bottom = HEIGHT - 40
 
+    # DRAW 
+
+    # TIMING BAR
     pygame.draw.rect(
         screen,
         (200, 200, 0),
         (0, TIMING_Y, WIDTH, TIMING_HEIGHT)
     )
 
+    # LANE DIVIDER
     pygame.draw.line(screen, (80, 80, 80), (400, 0), (400, HEIGHT), 2)
 
+    # PLAYERS
     pygame.draw.rect(screen, (200, 80, 80), p1_rect)
     pygame.draw.rect(screen, (80, 80, 220), p2_rect)
 
+    # FOODS
     for food in foods:
         pygame.draw.rect(
             screen,
             FOOD_COLORS[food["type"]],
             food["rect"]
         )
+
+    # LEGEND AND INFO
 
     legend_p1 = [
         "PLAYER 1 (RED) - WASD",
@@ -213,8 +225,12 @@ while running:
             (WIDTH // 2 - 60, food_legend_y + 28 + i * 22)
         )
 
+    # SIZE TEXT
+
     screen.blit(font.render(str(p1_size), True, (255, 255, 255)), (160, 520))
     screen.blit(font.render(str(p2_size), True, (255, 255, 255)), (510, 520))
+
+    # TIMER AND GAME OVER
 
     if not game_over:
         timer -= 1
@@ -227,6 +243,8 @@ while running:
 
     timer_text = font.render(f"{timer // FPS}", True, (255, 255, 255))
     screen.blit(timer_text, (WIDTH // 2 - 20, 20))
+
+    # END SCREEN
 
     if game_over:
         if p1_size > p2_size:
