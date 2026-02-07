@@ -258,14 +258,14 @@ while True:
         "PLAYER 1 (RED) - WASD",
         "W : Eat good food",
         "D : Pass junk food",
-        "A : Reject raw food"
+        "A : Reject spicy food"
     ]
 
     legend_p2 = [
         "PLAYER 2 (BLUE) - ARROWS",
         "UP    : Eat good food",
         "RIGHT : Pass junk food",
-        "LEFT  : Reject raw food"
+        "LEFT  : Reject spicy food"
     ]
 
     for i, line in enumerate(legend_p1):
@@ -288,7 +288,7 @@ while True:
     food_info = [
         ("Good food (Eat)", FOOD_COLORS["good"]),
         ("Junk food (Pass)", FOOD_COLORS["bad"]),
-        ("Raw food (Reject)", FOOD_COLORS["raw"])
+        ("Spicy food (Reject)", FOOD_COLORS["spicy"])
     ]
 
     for i, (label, color) in enumerate(food_info):
