@@ -1,11 +1,15 @@
 import pygame
 import random
 import sys
+import math
 
 # SETUP
 
 pygame.init()
+pygame.mixer.init()
+
 WIDTH, HEIGHT = 800, 600
+BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sumo Growth DDR")
 clock = pygame.time.Clock()
@@ -16,7 +20,7 @@ legend_font = pygame.font.SysFont(None, 24)
 # CONSTANTS
 
 FPS = 60
-GAME_LENGTH = 45 * FPS # 45 sekunder
+GAME_LENGTH = 10 * FPS # 10 sekunder
 
 TIMING_Y = 420
 TIMING_HEIGHT = 24
@@ -43,8 +47,8 @@ MISS_PENALTY = {
 p1_size = 50
 p2_size = 50
 
-p1_rect = pygame.Rect(LANES[1] - 25, 470, 50, 50)
-p2_rect = pygame.Rect(LANES[2] - 25, 470, 50, 50)
+p1_rect = pygame.Rect(0, 0, 50, 50)
+p2_rect = pygame.Rect(0, 0, 50, 50)
 
 # FOOD
 
@@ -66,115 +70,179 @@ def spawn_food():
 # GAME STATE
 
 timer = GAME_LENGTH
-running = True
-game_over = False
+state = "PLAYING"
+
+cutscene_timer = 0
+push_phase = "warmup"
+
+# SCREEN SHAKE
+shake_intensity = 0
+shake_timer = 0
+
+# ZOOM
+zoom = 1.0
+TARGET_ZOOM = 1.15
+
+# SOUND CHANT
+
+"""def generate_chant():
+    sound = pygame.sndarray.make_sound(
+        (pygame.surfarray.array2d(
+            pygame.Surface((200, 1))
+        ) % 255).astype('int16')
+    )
+    return sound
+
+try:
+    chant_sound = generate_chant()
+
+except:
+    chant_sound = None"""
+
+chant_sound = None 
 
 # GAME LOOP
 
-while running:
+while True:
     clock.tick(FPS)
-    screen.fill((25, 25, 30))
+    BASE_SURFACE.fill((25, 25, 30))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()
+            sys.exit()  
 
     keys = pygame.key.get_pressed()
 
-    # SPAWNING
+    # PLAYING STATE
 
-    if not game_over:
+    if state == "PLAYING":
         spawn_timer += 1
         if spawn_timer >= spawn_delay:
             spawn_food()
             spawn_timer = 0
 
-    # UPDATE FOODS
+        for food in foods[:]:
+            food["rect"].y += food_speed
+            in_zone = TIMING_Y <= food["rect"].y <= TIMING_Y + TIMING_HEIGHT
 
-    for food in foods[:]:
-        food["rect"].y += food_speed
+            # PLAYER 1
 
-        in_zone = (
-            TIMING_Y <= food["rect"].y <= TIMING_Y + TIMING_HEIGHT
-        )
+            if in_zone and food["lane"] == 1:
+                if food["type"] == "good" and keys[pygame.K_w]:
+                    p1_size += 5
+                    foods.remove(food)
 
-        # PLAYER 1 INPUT
+                elif food["type"] == "bad" and keys[pygame.K_d]:
+                    foods.remove(food)
 
-        if in_zone and food["lane"] == 1:
-            if food["type"] == "good" and keys[pygame.K_w]:
-                p1_size += 5
+                elif food["type"] == "raw" and keys[pygame.K_a]:
+                    foods.remove(food)
+
+            # PLAYER 2
+
+            if in_zone and food["lane"] == 2:
+                if food["type"] == "good" and keys[pygame.K_UP]:
+                    p2_size += 5
+                    foods.remove(food)
+
+                elif food["type"] == "bad" and keys[pygame.K_RIGHT]:
+                    foods.remove(food)
+
+                elif food["type"] == "raw" and keys[pygame.K_LEFT]:
+                    foods.remove(food)
+
+            # MISS PENALTY
+
+            if food in foods and food["rect"].y > TIMING_Y + TIMING_HEIGHT + 30:
+                if food["lane"] == 1:
+                    p1_size -= MISS_PENALTY[food["type"]]
+                else:
+                    p2_size -= MISS_PENALTY[food["type"]]
                 foods.remove(food)
 
-            elif food["type"] == "bad" and keys[pygame.K_d]:
-                foods.remove(food)
+        timer -= 1
+        if timer <= 0:
+            state = "CUTSCENE"
+            foods.clear()
 
-            elif food["type"] == "raw" and keys[pygame.K_a]:
-                foods.remove(food)
+            p1_rect.center = (WIDTH // 2 - 90, HEIGHT // 2)
+            p2_rect.center = (WIDTH // 2 + 90, HEIGHT // 2)
 
-        # PLAYER 2 INPUT
+            cutscene_timer = 0
+            push_phase = "warmup"
 
-        if in_zone and food["lane"] == 2:
-            if food["type"] == "good" and keys[pygame.K_UP]:
-                p2_size += 5
-                foods.remove(food)
+            if chant_sound:
+                chant_sound.play(-1)
 
-            elif food["type"] == "bad" and keys[pygame.K_RIGHT]:
-                foods.remove(food)
+        if timer % (10 * FPS) == 0:
+            food_speed += 0.5
+            spawn_delay = max(25, spawn_delay - 5)
 
-            elif food["type"] == "raw" and keys[pygame.K_LEFT]:
-                foods.remove(food)
+    # CUTSCENE
 
-        # PENALTY FOR MISSING FOOD
+    elif state == "CUTSCENE":
+        cutscene_timer += 1
+        zoom = min(TARGET_ZOOM, zoom + 0.002)
 
-        if food in foods and food["rect"].y > TIMING_Y + TIMING_HEIGHT + 30:
-            penalty = MISS_PENALTY[food["type"]]
+        if push_phase == "warmup":
+            offset = 4 if (cutscene_timer // 15) % 2 == 0 else -4
+            p1_rect.x += offset
+            p2_rect.x -= offset
 
-            if food["lane"] == 1:
-                p1_size -= penalty
+            if cutscene_timer > 120:
+                push_phase = "final"
+                shake_timer = 30
+                shake_intensity = 10
+
+        else:
+            force = max(2, abs(p1_size - p2_size) // 10)
+            if p1_size > p2_size:
+                p2_rect.x += force
             else:
-                p2_size -= penalty
+                p1_rect.x += force
 
-            foods.remove(food)
+        if p1_rect.right < 0 or p2_rect.left > WIDTH:
+            state = "RESULT"
+            if chant_sound:
+                chant_sound.stop()
     
     # CLAMP SIZE
 
     p1_size = max(30, p1_size)
     p2_size = max(30, p2_size)
 
-    p1_rect.width = p1_size
-    p1_rect.height = p1_size
-    p1_rect.centerx = LANES[1]
-    p1_rect.bottom = HEIGHT - 40
+    p1_rect.size = (p1_size, p1_size)
+    p2_rect.size = (p2_size, p2_size)
 
-    p2_rect.width = p2_size
-    p2_rect.height = p2_size
-    p2_rect.centerx = LANES[2]
-    p2_rect.bottom = HEIGHT - 40
+    # DRAW WORLD
 
-    # DRAW 
+    if state == "PLAYING":
+        pygame.draw.rect(BASE_SURFACE, (200, 200, 0), (0, TIMING_Y, WIDTH, TIMING_HEIGHT))
+        pygame.draw.line(BASE_SURFACE, (80, 80, 80), (400, 0), (400, HEIGHT), 2)
 
-    # TIMING BAR
-    pygame.draw.rect(
-        screen,
-        (200, 200, 0),
-        (0, TIMING_Y, WIDTH, TIMING_HEIGHT)
+        for food in foods:
+            pygame.draw.rect(BASE_SURFACE, FOOD_COLORS[food["type"]], food["rect"])
+    
+    pygame.draw.rect(BASE_SURFACE, (200, 80, 80), p1_rect)
+    pygame.draw.rect(BASE_SURFACE, (80, 80, 220), p2_rect)
+
+    # SHAKE AND ZOOM
+    
+    shake_x = shake_y = 0
+    if shake_timer > 0:
+        shake_timer -= 1
+        shake_x = random.randint(-shake_intensity, shake_intensity)
+        shake_y = random.randint(-shake_intensity, shake_intensity)
+
+    scaled = pygame.transform.scale(
+        BASE_SURFACE,
+        (int(WIDTH * zoom), int(HEIGHT * zoom))
     )
 
-    # LANE DIVIDER
-    pygame.draw.line(screen, (80, 80, 80), (400, 0), (400, HEIGHT), 2)
-
-    # PLAYERS
-    pygame.draw.rect(screen, (200, 80, 80), p1_rect)
-    pygame.draw.rect(screen, (80, 80, 220), p2_rect)
-
-    # FOODS
-    for food in foods:
-        pygame.draw.rect(
-            screen,
-            FOOD_COLORS[food["type"]],
-            food["rect"]
-        )
+    rect = scaled.get_rect(center=(WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
+    screen.fill((0, 0, 0))
+    screen.blit(scaled, rect)
 
     # LEGEND AND INFO
 
@@ -230,35 +298,17 @@ while running:
     screen.blit(font.render(str(p1_size), True, (255, 255, 255)), (160, 520))
     screen.blit(font.render(str(p2_size), True, (255, 255, 255)), (510, 520))
 
-    # TIMER AND GAME OVER
-
-    if not game_over:
-        timer -= 1
-        if timer <= 0:
-            game_over = True
-
-        if timer % (10 * FPS) == 0:
-            food_speed += 0.5
-            spawn_delay = max(25, spawn_delay - 5)
-
-    timer_text = font.render(f"{timer // FPS}", True, (255, 255, 255))
-    screen.blit(timer_text, (WIDTH // 2 - 20, 20))
-
-    # END SCREEN
-
-    if game_over:
+    # RESULT
+    
+    if state == "RESULT":
+        winner = "DRAW"
         if p1_size > p2_size:
-            msg = "PLAYER 1 WINS"
+            winner = "PLAYER 1 WINS!"
         elif p2_size > p1_size:
-            msg = "PLAYER 2 WINS"
-        else:
-            msg = "DRAW"
+            winner = "PLAYER 2 WINS!"
 
-        text = font.render(msg, True, (255, 255, 255))
-        screen.blit(
-            text,
-            (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 20)
-        )
+        text = font.render(winner, True, (255, 255, 255))
+        screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 20))
 
     pygame.display.flip()
 
