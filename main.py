@@ -20,7 +20,7 @@ legend_font = pygame.font.SysFont(None, 24)
 # CONSTANTS
 
 FPS = 60
-GAME_LENGTH = 10 * FPS # 10 sekunder
+GAME_LENGTH = 20 * FPS # 10 sekunder
 
 TIMING_Y = 420
 TIMING_HEIGHT = 24
@@ -30,11 +30,59 @@ LANES = {
     2: 550, # Player 2 lane (Piltaster)
 }
 
+# TABLE LAYOUT
+TABLE_RECT = pygame.Rect(100, 260, 600, 80)
+
+TRASH_LEFT_RECT = pygame.Rect(
+    TABLE_RECT.left - 40, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+TRASH_RIGHT_RECT = pygame.Rect(
+    TABLE_RECT.right + 10, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+WOMAN_RECT = pygame.Rect(
+    TABLE_RECT.centerx - 25, TABLE_RECT.bottom + 10, 50, 80)
+
+P1_DISH_RECT = pygame.Rect(
+    TABLE_RECT.left + 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
+P2_DISH_RECT = pygame.Rect(
+    TABLE_RECT.right - 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
+# TABLE LAYOUT
+TABLE_RECT = pygame.Rect(100, 260, 600, 80)
+
+TRASH_LEFT_RECT = pygame.Rect(
+    TABLE_RECT.left - 40, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+TRASH_RIGHT_RECT = pygame.Rect(
+    TABLE_RECT.right + 10, TABLE_RECT.top, 30, TABLE_RECT.height)
+
+WOMAN_RECT = pygame.Rect(
+    TABLE_RECT.centerx - 25, TABLE_RECT.bottom + 10, 50, 80)
+
+P1_DISH_RECT = pygame.Rect(
+    TABLE_RECT.left + 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
+P2_DISH_RECT = pygame.Rect(
+    TABLE_RECT.right - 120,
+    TABLE_RECT.centery - 20,
+    40, 40
+)
+
 # FOOD IMAGES
 FOOD_IMAGES = {
-    "good": pygame.image.load(r"Food_Images\Vanlig.png").convert_alpha(),
-    "bad": pygame.image.load(r"Food_Images\Rotten_0003.png").convert_alpha(),
-    "spicy": pygame.image.load(r"Food_Images\Spicy.png").convert_alpha()
+    "good": pygame.image.load(r"Food_Images/Vanlig.png").convert_alpha(),
+    "bad": pygame.image.load(r"Food_Images/Rotten_0003.png").convert_alpha(),
+    "spicy": pygame.image.load(r"Food_Images/Spicy.png").convert_alpha()
 }
 
 # Optional: scale them to 30x30 to match your old rectangle size
@@ -65,23 +113,6 @@ p2_size = 50
 p1_rect = pygame.Rect(0, 0, 50, 50)
 p2_rect = pygame.Rect(0, 0, 50, 50)
 
-# FOOD
-
-foods = []
-spawn_timer = 0
-spawn_delay = 60
-food_speed = 4
-
-def spawn_food():
-    lane = random.choice([1, 2])
-    food_type = random.choice(["good", "bad", "spicy"])
-    rect = pygame.Rect(LANES[lane] - 15, -30, 30, 30)
-    foods.append({
-        "rect": rect,
-        "type": food_type,
-        "lane": lane
-    })
-
 # GAME STATE
 
 timer = GAME_LENGTH
@@ -89,6 +120,14 @@ state = "PLAYING"
 
 cutscene_timer = 0
 push_phase = "warmup"
+
+# DISHES SPAWNING
+
+p1_dish = None
+p2_dish = None
+
+def spawn_dish():
+    return random.choice(["good", "bad", "spicy"])
 
 # SCREEN SHAKE
 shake_intensity = 0
@@ -132,55 +171,42 @@ while True:
     # PLAYING STATE
 
     if state == "PLAYING":
-        spawn_timer += 1
-        if spawn_timer >= spawn_delay:
-            spawn_food()
-            spawn_timer = 0
+        if p1_dish is None:
+            p1_dish = spawn_dish()
 
-        for food in foods[:]:
-            food["rect"].y += food_speed
-            in_zone = TIMING_Y <= food["rect"].y <= TIMING_Y + TIMING_HEIGHT
+        if p2_dish is None:
+            p2_dish = spawn_dish()
 
-            # PLAYER 1
+        # PLAYER 1 (left)
+        if p1_dish is not None:
 
-            if in_zone and food["lane"] == 1:
-                if food["type"] == "good" and keys[pygame.K_w]:
-                    p1_size += 5
-                    foods.remove(food)
+            if p1_dish == "good" and keys[pygame.K_w]:
+                p1_size += 5
+                p1_dish = None
 
-                elif food["type"] == "bad" and keys[pygame.K_a]:
-                # Trash is to the LEFT
-                    foods.remove(food)
+            elif p1_dish == "bad" and keys[pygame.K_a]:
+                # TRASH (left)
+                p1_dish = None
 
-                elif food["type"] == "spicy" and keys[pygame.K_d]:
-                # Woman is towards the CENTER (right)
-                    foods.remove(food)
+            elif p1_dish == "spicy" and keys[pygame.K_d]:
+                # WOMAN (towards center)
+                p1_dish = None
+            
+        # PLAYER 2 (right)
 
+        if p2_dish is not None:
 
-            # PLAYER 2
+            if p2_dish == "good" and keys[pygame.K_UP]:
+                p2_size += 5
+                p2_dish = None
 
-            if in_zone and food["lane"] == 2:
-                if food["type"] == "good" and keys[pygame.K_UP]:
-                    p2_size += 5
-                    foods.remove(food)
+            elif p2_dish == "bad" and keys[pygame.K_RIGHT]:
+                # TRASH (right)
+                p2_dish = None
 
-                elif food["type"] == "bad" and keys[pygame.K_RIGHT]:
-                # Trash is to the RIGHT
-                    foods.remove(food)
-
-                elif food["type"] == "spicy" and keys[pygame.K_LEFT]:
-                # Woman is towards the CENTER (left)
-                    foods.remove(food)
-
-
-            # MISS PENALTY
-
-            if food in foods and food["rect"].y > TIMING_Y + TIMING_HEIGHT + 30:
-                if food["lane"] == 1:
-                    p1_size -= MISS_PENALTY[food["type"]]
-                else:
-                    p2_size -= MISS_PENALTY[food["type"]]
-                foods.remove(food)
+            elif p2_dish == "spicy" and keys[pygame.K_LEFT]:
+                # WOMAN (towards center)
+                p2_dish = None
 
         timer -= 1
         if timer <= 0:
@@ -241,11 +267,37 @@ while True:
     # DRAW WORLD
 
     if state == "PLAYING":
-        pygame.draw.rect(BASE_SURFACE, (200, 200, 0), (0, TIMING_Y, WIDTH, TIMING_HEIGHT))
-        pygame.draw.line(BASE_SURFACE, (80, 80, 80), (400, 0), (400, HEIGHT), 2)
+        
+        # TABLE
+        pygame.draw.rect(BASE_SURFACE, (180, 150, 90), TABLE_RECT)
 
-        for food in foods:
-            BASE_SURFACE.blit(FOOD_IMAGES[food["type"]], food["rect"].topleft) 
+        # TRASH CANS
+        pygame.draw.rect(BASE_SURFACE, (120, 120, 120), TRASH_LEFT_RECT)
+        pygame.draw.rect(BASE_SURFACE, (120, 120, 120), TRASH_RIGHT_RECT)
+
+        # WOMAN (PLACEHOLDER)
+        pygame.draw.rect(BASE_SURFACE, (200, 120, 200), WOMAN_RECT)
+
+        # PLAYER 1 DISH
+        if p1_dish:
+            BASE_SURFACE.blit(
+                FOOD_IMAGES[p1_dish],
+                (
+                    P1_DISH_RECT.centerx - FOOD_IMAGES[p1_dish].get_width() // 2,
+                    P1_DISH_RECT.centery - FOOD_IMAGES[p1_dish].get_height() // 2
+                )
+            )
+
+        # PLAYER 2 DISH
+        if p2_dish:
+            BASE_SURFACE.blit(
+                FOOD_IMAGES[p2_dish],
+                (
+                    P2_DISH_RECT.centerx - FOOD_IMAGES[p2_dish].get_width() // 2,
+                    P2_DISH_RECT.centery - FOOD_IMAGES[p2_dish].get_height() // 2
+                )
+            )
+
 
     pygame.draw.rect(BASE_SURFACE, (200, 80, 80), p1_rect)
     pygame.draw.rect(BASE_SURFACE, (80, 80, 220), p2_rect)
