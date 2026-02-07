@@ -33,13 +33,13 @@ LANES = {
 FOOD_COLORS = {
     "good": (80, 220, 120),     # green
     "bad": (220, 80, 80),       # red
-    "raw": (200, 200, 200)      # gray
+    "spicy": (200, 200, 200)      # gray
 }
 
 MISS_PENALTY = {
     "good": 4,
     "bad": 2,
-    "raw": 1
+    "spicy": 1
 }
 
 # PLAYER DATA
@@ -59,7 +59,7 @@ food_speed = 4
 
 def spawn_food():
     lane = random.choice([1, 2])
-    food_type = random.choice(["good", "bad", "raw"])
+    food_type = random.choice(["good", "bad", "spicy"])
     rect = pygame.Rect(LANES[lane] - 15, -30, 30, 30)
     foods.append({
         "rect": rect,
@@ -137,7 +137,7 @@ while True:
                 # Trash is to the LEFT
                     foods.remove(food)
 
-                elif food["type"] == "raw" and keys[pygame.K_d]:
+                elif food["type"] == "spicy" and keys[pygame.K_d]:
                 # Woman is towards the CENTER (right)
                     foods.remove(food)
 
@@ -153,7 +153,7 @@ while True:
                 # Trash is to the RIGHT
                     foods.remove(food)
 
-                elif food["type"] == "raw" and keys[pygame.K_LEFT]:
+                elif food["type"] == "spicy" and keys[pygame.K_LEFT]:
                 # Woman is towards the CENTER (left)
                     foods.remove(food)
 
