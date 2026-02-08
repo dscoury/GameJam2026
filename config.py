@@ -1,5 +1,3 @@
-# config.py
-
 WIDTH, HEIGHT = 800, 600
 TOP_THIRD = HEIGHT // 3
 MIDDLE_THIRD = HEIGHT // 3

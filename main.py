@@ -74,8 +74,6 @@ p2 = Player(
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
 p2.rect.center = (WIDTH // 2 + 150, HEIGHT - 120)
 
-
-# Optional: scale them to 30x30 to match your old rectangle size
 for key in assets.food_images:
     assets.food_images[key] = pygame.transform.scale(assets.food_images[key], (70, 70))
 
@@ -113,14 +111,14 @@ while True:
             sys.exit()  
     keys = pygame.key.get_pressed()
 
-    # --- 1. MENU STATE ---
+    # MENU STATE
     if game_state.state == "MENU":
         menu.handle_input(events, game_state)
         menu.draw(BASE_SURFACE)
 
-    # --- 2. PLAYING STATE ---
+    # PLAYING STATE
     elif game_state.state == "PLAYING":
-        BASE_SURFACE.blit(background, (0, 0)) # Draw Restaurant BG
+        BASE_SURFACE.blit(background, (0, 0))
 
         if not p1.current_dish and p1.stun_timer == 0:
             p1.spawn_dish()
@@ -132,10 +130,9 @@ while True:
         p2.handle_input(keys, table)
 
         # Update timers
-        p1.update() # <--- ADD THIS
-        p2.update() # <--- ADD THIS
+        p1.update() 
+        p2.update() 
 
-        # Update the sliding animation
         p1.update_animation()
         p2.update_animation()
 
@@ -145,9 +142,9 @@ while True:
             cutscene.start(p1, p2, table)
             if chant_sound: chant_sound.play(-1)
 
-    # --- 3. CUTSCENE STATE ---
+    # CUTSCENE STATE
     elif game_state.state == "CUTSCENE":
-        BASE_SURFACE.blit(assets.outside_image, (0, 0)) # Draw Outside BG
+        BASE_SURFACE.blit(assets.outside_image, (0, 0)) 
 
         zoom = min(TARGET_ZOOM, zoom + 0.002)
         finished = cutscene.update(p1, p2)
@@ -157,9 +154,9 @@ while True:
             zoom = 1.0
             if chant_sound: chant_sound.stop()
 
-    # 4. RESULT STATE
+    # RESULT STATE
     elif game_state.state == "RESULT":
-        BASE_SURFACE.blit(assets.outside_image, (0, 0)) # Draw Outside BG
+        BASE_SURFACE.blit(assets.outside_image, (0, 0)) 
         
         # Check for restart click
         menu.handle_input(events, game_state)
@@ -168,21 +165,17 @@ while True:
     p1.clamp()
     p2.clamp()
 
-    # LOGIC: Draw Table ONLY in PLAYING, but Players ALWAYS
     if game_state.state in ("PLAYING", "CUTSCENE", "RESULT"):
         
-        # A. Draw Table & Dishes (PLAYING ONLY)
         if game_state.state == "PLAYING":
             table.draw(BASE_SURFACE)
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
             
-            # Align Y to table top
             character_y = table.table_rect.top
             p1.rect.midbottom = (p1.rect.centerx, character_y)
             p2.rect.midbottom = (p2.rect.centerx, character_y)
 
-        # B. Draw Players (ALL STATES)
         p1.draw(BASE_SURFACE)
         p2.draw(BASE_SURFACE)
 

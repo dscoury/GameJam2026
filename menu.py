@@ -11,7 +11,6 @@ class Menu:
         self.button_rect = self.button_img.get_rect()
         self.button_rect.center = (WIDTH // 2, 450)
 
-        # Hover animation state
         self.is_hovered = False
 
     def handle_input(self, events, game_state):
@@ -20,13 +19,13 @@ class Menu:
 
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: # Left click
+                if event.button == 1: # LEFT CLICK
                     if self.is_hovered:
                         if game_state.state == "RESULT":
                             game_state.state = "MENU"
                         else:
                             game_state.state = "PLAYING"
-                            game_state.reset() # Ensure timer resets
+                            game_state.reset() 
 
     def draw(self, surface):
         # Draw start screen

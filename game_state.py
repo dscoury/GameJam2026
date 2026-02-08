@@ -1,4 +1,3 @@
-# game_state.py
 from config import *
 
 class GameState:
