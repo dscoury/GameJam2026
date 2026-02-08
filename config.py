@@ -1,9 +1,13 @@
 # config.py
 
 WIDTH, HEIGHT = 800, 600
+TOP_THIRD = HEIGHT // 3
+MIDDLE_THIRD = HEIGHT // 3
+BOTTOM_THIRD = HEIGHT * 2 // 3
+
 FPS = 60
 
-GAME_LENGTH = 20 * FPS  # seconds * FPS
+GAME_LENGTH = 20 * FPS  # 20 seconds
 
 # Zoom
 TARGET_ZOOM = 1.15

@@ -4,8 +4,19 @@ from config import *
 
 class Table:
     def __init__(self):
-        self.table_rect = pygame.Rect(100, 260, 600, 80)
+        # --- table dimensions ---
+        table_width = 600
+        table_height = 80
 
+        # --- table in lower third ---
+        self.table_rect = pygame.Rect(
+            (WIDTH - table_width) // 2,
+            BOTTOM_THIRD,
+            table_width,
+            table_height
+        )
+
+        # --- trash bins (locked to table) ---
         self.trash_left = pygame.Rect(
             self.table_rect.left - 40,
             self.table_rect.top,
@@ -20,24 +31,32 @@ class Table:
             self.table_rect.height
         )
 
-        self.woman_rect = pygame.Rect(
-            self.table_rect.centerx - 25,
-            self.table_rect.bottom + 10,
-            50,
-            80
+        # --- shared Y for characters (top of table) ---
+        character_y = self.table_rect.top
+
+        # --- woman (centered) ---
+        self.woman_rect = pygame.Rect(0, 0, 50, 80)
+        self.woman_rect.midbottom = (
+            WIDTH // 2,
+            character_y
         )
 
-        self.p1_dish_rect = pygame.Rect(
-            self.table_rect.left + 120,
-            self.table_rect.centery - 20,
-            40, 40
+        # --- player positions (middle third) ---
+        # --- food positions (ON the table) ---
+        food_y = self.table_rect.top + 10  # padding on table surface
+
+        self.p1_dish_rect = pygame.Rect(0, 0, 40, 40)
+        self.p1_dish_rect.midtop = (
+            self.table_rect.left + 140,
+            food_y
         )
 
-        self.p2_dish_rect = pygame.Rect(
-            self.table_rect.right - 120,
-            self.table_rect.centery - 20,
-            40, 40
+        self.p2_dish_rect = pygame.Rect(0, 0, 40, 40)
+        self.p2_dish_rect.midtop = (
+            self.table_rect.right - 140,
+            food_y
         )
+
 
     def draw(self, surface):
         pygame.draw.rect(surface, TABLE_COLOR, self.table_rect)
