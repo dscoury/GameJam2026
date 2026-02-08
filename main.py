@@ -40,8 +40,8 @@ cutscene = CutsceneController(WIDTH)
 # PLAYER 1 AND 2
 
 p1 = Player(
-    color=(200, 80, 80),
-    controls={
+    color = (200, 80, 80),
+    controls = {
         "good": pygame.K_w,
         "bad": pygame.K_a,
         "spicy": pygame.K_d
@@ -50,8 +50,8 @@ p1 = Player(
 )
 
 p2 = Player(
-    color=(80, 80, 220),
-    controls={
+    color = (80, 80, 220),
+    controls = {
         "good": pygame.K_UP,
         "bad": pygame.K_RIGHT,
         "spicy": pygame.K_LEFT
