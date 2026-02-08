@@ -6,6 +6,7 @@ from player import Player
 from cutscene import CutsceneController
 from config import *
 from assets import Assets
+from table import Table
 
 # SETUP
 
@@ -17,6 +18,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sumo Growth DDR")
 clock = pygame.time.Clock()
 assets = Assets()
+table = Table()
 
 # CONSTANTS
 
@@ -31,30 +33,6 @@ LANES = {
     2: 550, # Player 2 lane (Piltaster)
 }
 
-# TABLE LAYOUT
-TABLE_RECT = pygame.Rect(100, 260, 600, 80)
-
-TRASH_LEFT_RECT = pygame.Rect(
-    TABLE_RECT.left - 40, TABLE_RECT.top, 30, TABLE_RECT.height)
-
-TRASH_RIGHT_RECT = pygame.Rect(
-    TABLE_RECT.right + 10, TABLE_RECT.top, 30, TABLE_RECT.height)
-
-WOMAN_RECT = pygame.Rect(
-    TABLE_RECT.centerx - 25, TABLE_RECT.bottom + 10, 50, 80)
-
-P1_DISH_RECT = pygame.Rect(
-    TABLE_RECT.left + 120,
-    TABLE_RECT.centery - 20,
-    40, 40
-)
-
-P2_DISH_RECT = pygame.Rect(
-    TABLE_RECT.right - 120,
-    TABLE_RECT.centery - 20,
-    40, 40
-)
-
 # ZOOM
 zoom = 1.0
 cutscene = CutsceneController(WIDTH)
@@ -68,7 +46,7 @@ p1 = Player(
         "bad": pygame.K_a,
         "spicy": pygame.K_d
     },
-    dish_rect=P1_DISH_RECT
+    dish_rect = table.p1_dish_rect
 )
 
 p2 = Player(
@@ -78,7 +56,7 @@ p2 = Player(
         "bad": pygame.K_RIGHT,
         "spicy": pygame.K_LEFT
     },
-    dish_rect=P2_DISH_RECT
+    dish_rect = table.p2_dish_rect
 )
 
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
@@ -110,22 +88,6 @@ shake_timer = 0
 # ZOOM
 zoom = 1.0
 TARGET_ZOOM = 1.15
-
-# SOUND CHANT
-
-"""def generate_chant():
-    sound = pygame.sndarray.make_sound(
-        (pygame.surfarray.array2d(
-            pygame.Surface((200, 1))
-        ) % 255).astype('int16')
-    )
-    return sound
-
-try:
-    chant_sound = generate_chant()
-
-except:
-    chant_sound = None"""
 
 chant_sound = None 
 
@@ -193,16 +155,7 @@ while True:
     # DRAW WORLD
 
     if state == "PLAYING":
-        
-        # TABLE
-        pygame.draw.rect(BASE_SURFACE, (180, 150, 90), TABLE_RECT)
-
-        # TRASH CANS
-        pygame.draw.rect(BASE_SURFACE, (120, 120, 120), TRASH_LEFT_RECT)
-        pygame.draw.rect(BASE_SURFACE, (120, 120, 120), TRASH_RIGHT_RECT)
-
-        # WOMAN (PLACEHOLDER)
-        pygame.draw.rect(BASE_SURFACE, (200, 120, 200), WOMAN_RECT)
+        table.draw(BASE_SURFACE)
 
         # PLAYER 1 AND 2 DISH
         p1.draw_dish(BASE_SURFACE, assets.food_images)
