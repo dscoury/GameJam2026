@@ -158,10 +158,10 @@ while True:
     # DRAW WORLD
 
     if game_state.state in ("PLAYING", "CUTSCENE"):
-        table.draw(BASE_SURFACE)
 
         # PLAYER 1 AND 2 DISH
         if game_state.state == "PLAYING":
+            table.draw(BASE_SURFACE)
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
 
@@ -174,8 +174,10 @@ while True:
             p1.rect.midbottom = (p1.rect.centerx, character_y)
             p2.rect.midbottom = (p2.rect.centerx, character_y)
 
+            
 
 
+    
     p1.draw(BASE_SURFACE)
     p2.draw(BASE_SURFACE)
 
