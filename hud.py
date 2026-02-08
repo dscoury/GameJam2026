@@ -10,7 +10,7 @@ class HUD:
         lf = self.assets.legend_font
         f = self.assets.font
 
-        legend_p1 = [
+        """legend_p1 = [
             "PLAYER 1 (LEFT) - WASD",
             "W : Eat good food",
             "A : Throw away bad food",
@@ -34,7 +34,7 @@ class HUD:
         screen.blit(f.render(str(p1.size), True, (255, 255, 255)), (160, 520))
         screen.blit(f.render(str(p2.size), True, (255, 255, 255)), (510, 520)
 
-        )
+        )"""
 
     def draw_result(self, screen, winner):
         f = self.assets.font
@@ -49,7 +49,7 @@ class HUD:
 
         food_legend_y = 120
 
-        screen.blit(
+        """screen.blit(
             lf.render("FOOD TYPES:", True, (255, 255, 255)),
             (self.width // 2 - 60, food_legend_y)
         )
@@ -71,5 +71,5 @@ class HUD:
             screen.blit(
                 lf.render(label, True, (230, 230, 230)),
                 (self.width // 2 - 50, food_legend_y + 28 + i * 26)
-            )
+            )"""
 

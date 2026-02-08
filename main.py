@@ -17,7 +17,11 @@ pygame.mixer.init()
 
 BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sumo Growth DDR")
+background = pygame.image.load(
+    "PixelArt_GameJam/backgroundRestaurant.png"
+).convert_alpha()
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+pygame.display.set_caption("Ramen Rumble")
 clock = pygame.time.Clock()
 assets = Assets()
 table = Table()
@@ -96,7 +100,7 @@ chant_sound = None
 
 while True:
     clock.tick(FPS)
-    BASE_SURFACE.fill((25, 25, 30))
+    BASE_SURFACE.blit(background, (0, 0))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -193,7 +197,6 @@ while True:
     )
 
     rect = scaled.get_rect(center = (WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
-    screen.fill((0, 0, 0))
     screen.blit(scaled, rect)
 
     # HUD
