@@ -39,8 +39,8 @@ TIMING_Y = 420
 TIMING_HEIGHT = 24
 
 LANES = {
-    1: 200, # Player 1 lane (WASD)
-    2: 550, # Player 2 lane (Piltaster)
+    1: 200, 
+    2: 550, 
 }
 
 # ZOOM
@@ -57,7 +57,8 @@ p1 = Player(
         "spicy": pygame.K_d
     },
     dish_rect = table.p1_dish_rect,
-    image = assets.player_images["p1"]
+    image = assets.player_images["p1"],
+    reaction_images = assets.p1_reactions # <--- Passed Reactions
 )
 
 p2 = Player(
@@ -68,7 +69,8 @@ p2 = Player(
         "spicy": pygame.K_LEFT
     },
     dish_rect = table.p2_dish_rect,
-    image = assets.player_images["p2"]
+    image = assets.player_images["p2"],
+    reaction_images = assets.p2_reactions # <--- Passed Reactions
 )
 
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
@@ -132,8 +134,8 @@ while True:
         p2.handle_input(keys, table)
 
         # Update timers
-        p1.update() # <--- ADD THIS
-        p2.update() # <--- ADD THIS
+        p1.update() 
+        p2.update() 
 
         # Update the sliding animation
         p1.update_animation()
@@ -170,19 +172,21 @@ while True:
 
     # LOGIC: Draw Table ONLY in PLAYING, but Players ALWAYS
     if game_state.state in ("PLAYING", "CUTSCENE", "RESULT"):
-        
-        # A. Draw Table & Dishes (PLAYING ONLY)
+
+        # 1. Draw Table
+        table.draw(BASE_SURFACE)
+
+        # 2. Logic specific to PLAYING
         if game_state.state == "PLAYING":
-            table.draw(BASE_SURFACE)
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
-            
-            # Align Y to table top
+
+            # Force vertical alignment
             character_y = table.table_rect.top
             p1.rect.midbottom = (p1.rect.centerx, character_y)
             p2.rect.midbottom = (p2.rect.centerx, character_y)
 
-        # B. Draw Players (ALL STATES)
+        # 3. Draw Players
         p1.draw(BASE_SURFACE)
         p2.draw(BASE_SURFACE)
 
