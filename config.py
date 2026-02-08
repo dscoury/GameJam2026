@@ -1,0 +1,15 @@
+# config.py
+
+WIDTH, HEIGHT = 800, 600
+FPS = 60
+
+GAME_LENGTH = 20 * FPS  # seconds * FPS
+
+# Zoom
+TARGET_ZOOM = 1.15
+
+# Colors
+BG_COLOR = (25, 25, 30)
+TABLE_COLOR = (180, 150, 90)
+TRASH_COLOR = (120, 120, 120)
+WOMAN_COLOR = (200, 120, 200)

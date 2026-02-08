@@ -4,25 +4,21 @@ import sys
 import math
 from player import Player
 from cutscene import CutsceneController
+from config import *
+from assets import Assets
 
 # SETUP
 
 pygame.init()
 pygame.mixer.init()
 
-WIDTH, HEIGHT = 800, 600
 BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sumo Growth DDR")
 clock = pygame.time.Clock()
-
-font = pygame.font.SysFont(None, 48)
-legend_font = pygame.font.SysFont(None, 24)
+assets = Assets()
 
 # CONSTANTS
-
-FPS = 60
-GAME_LENGTH = 20 * FPS # 20 sekunder
 
 CUTSCENE_WARMUP_FRAMES = 120
 BASE_PUSH_FORCE = 2
@@ -61,7 +57,6 @@ P2_DISH_RECT = pygame.Rect(
 
 # ZOOM
 zoom = 1.0
-TARGET_ZOOM = 1.15
 cutscene = CutsceneController(WIDTH)
 
 # PLAYER 1 AND 2
@@ -89,16 +84,10 @@ p2 = Player(
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
 p2.rect.center = (WIDTH // 2 + 150, HEIGHT - 120)
 
-# FOOD IMAGES
-FOOD_IMAGES = {
-    "good": pygame.image.load(r"Food_Images/Vanlig.png").convert_alpha(),
-    "bad": pygame.image.load(r"Food_Images/Rotten_0003.png").convert_alpha(),
-    "spicy": pygame.image.load(r"Food_Images/Spicy.png").convert_alpha()
-}
 
 # Optional: scale them to 30x30 to match your old rectangle size
-for key in FOOD_IMAGES:
-    FOOD_IMAGES[key] = pygame.transform.scale(FOOD_IMAGES[key], (70, 70))
+for key in assets.food_images:
+    assets.food_images[key] = pygame.transform.scale(assets.food_images[key], (70, 70))
 
 MISS_PENALTY = {
     "good": 4,
@@ -216,8 +205,8 @@ while True:
         pygame.draw.rect(BASE_SURFACE, (200, 120, 200), WOMAN_RECT)
 
         # PLAYER 1 AND 2 DISH
-        p1.draw_dish(BASE_SURFACE, FOOD_IMAGES)
-        p2.draw_dish(BASE_SURFACE, FOOD_IMAGES)
+        p1.draw_dish(BASE_SURFACE, assets.food_images)
+        p2.draw_dish(BASE_SURFACE, assets.food_images)
 
 
     p1.draw(BASE_SURFACE)
@@ -258,19 +247,19 @@ while True:
 
     for i, line in enumerate(legend_p1):
         screen.blit(
-            legend_font.render(line, True, (220, 100, 100)),
+            assets.legend_font.render(line, True, (220, 100, 100)),
             (20, 20 + i * 22)
         )
 
     for i, line in enumerate(legend_p2):
-        text = legend_font.render(line, True, (100, 100, 220))
+        text = assets.legend_font.render(line, True, (100, 100, 220))
         screen.blit(
             text,
             (WIDTH - text.get_width() - 20, 20 + i * 22)
         )
 
     food_legend_y = 120
-    screen.blit(legend_font.render("FOOD TYPES:", True, (255, 255, 255)),
+    screen.blit(assets.legend_font.render("FOOD TYPES:", True, (255, 255, 255)),
                 (WIDTH // 2 - 60, food_legend_y))
 
     food_info = [
@@ -280,7 +269,7 @@ while True:
 ]
 
     for i, (label, food_type) in enumerate(food_info):
-        icon = FOOD_IMAGES[food_type]
+        icon = assets.food_images[food_type]
 
         screen.blit(
             pygame.transform.scale(icon, (20, 20)),
@@ -288,14 +277,14 @@ while True:
         )
 
         screen.blit(
-            legend_font.render(label, True, (230, 230, 230)),
+            assets.legend_font.render(label, True, (230, 230, 230)),
             (WIDTH // 2 - 50, food_legend_y + 28 + i * 26)
         )
         
     # SIZE TEXT
 
-    screen.blit(font.render(str(p1.size), True, (255, 255, 255)), (160, 520))
-    screen.blit(font.render(str(p2.size), True, (255, 255, 255)), (510, 520))
+    screen.blit(assets.font.render(str(p1.size), True, (255, 255, 255)), (160, 520))
+    screen.blit(assets.font.render(str(p2.size), True, (255, 255, 255)), (510, 520))
 
     # RESULT
     
@@ -306,7 +295,7 @@ while True:
         elif p2.size > p1.size:
             winner = "PLAYER 2 WINS!"
 
-        text = font.render(winner, True, (255, 255, 255))
+        text = assets.font.render(winner, True, (255, 255, 255))
         screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 20))
 
     pygame.display.flip()
