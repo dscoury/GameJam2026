@@ -7,6 +7,8 @@ from cutscene import CutsceneController
 from config import *
 from assets import Assets
 from table import Table
+from hud import HUD
+from game_state import GameState
 
 # SETUP
 
@@ -19,6 +21,8 @@ pygame.display.set_caption("Sumo Growth DDR")
 clock = pygame.time.Clock()
 assets = Assets()
 table = Table()
+hud = HUD(assets, WIDTH)
+game_state = GameState()
 
 # CONSTANTS
 
@@ -75,9 +79,6 @@ MISS_PENALTY = {
 
 # GAME STATE
 
-timer = GAME_LENGTH
-state = "PLAYING"
-
 cutscene_timer = 0
 push_phase = "warmup"
 
@@ -106,7 +107,7 @@ while True:
 
     # PLAYING STATE
 
-    if state == "PLAYING":
+    if game_state.state == "PLAYING":
 
         if not p1.current_dish:
             p1.spawn_dish()
@@ -116,12 +117,13 @@ while True:
 
         p1.handle_input(keys)
         p2.handle_input(keys)
-        
-        timer -= 1
-        if timer <= 0:
-            state = "CUTSCENE"
+
+        result = game_state.update()
+
+        if result == "CUTSCENE":
             zoom = 1.0
             cutscene.start(p1, p2)
+
 
             if chant_sound:
                 chant_sound.play(-1)
@@ -135,13 +137,13 @@ while True:
 
     # CUTSCENE
 
-    elif state == "CUTSCENE":
+    elif game_state.state == "CUTSCENE":
         zoom = min(TARGET_ZOOM, zoom + 0.002)
 
         finished = cutscene.update(p1, p2)
 
         if finished:
-            state = "RESULT"
+            game_state.state = "RESULT"
             zoom = 1.0
 
             if chant_sound:
@@ -154,7 +156,7 @@ while True:
 
     # DRAW WORLD
 
-    if state == "PLAYING":
+    if game_state.state == "PLAYING":
         table.draw(BASE_SURFACE)
 
         # PLAYER 1 AND 2 DISH
@@ -182,73 +184,18 @@ while True:
     screen.fill((0, 0, 0))
     screen.blit(scaled, rect)
 
-    # LEGEND AND INFO
-    
-    legend_p1 = [
-        "PLAYER 1 (RED) - WASD",
-        "W : Eat good food",
-        "A : Throw away bad food",
-        "D : Give away spicy food"
-    ]
+    # HUD
+    if game_state.state == "PLAYING":
+        hud.draw_playing(screen, p1, p2)
+        hud.draw_food_legend(screen)
 
-    legend_p2 = [
-        "PLAYER 2 (BLUE) - ARROWS",
-        "UP    : Eat good food",
-        "RIGHT : Throw away bad food",
-        "LEFT  : Give away spicy food"
-    ]
-
-    for i, line in enumerate(legend_p1):
-        screen.blit(
-            assets.legend_font.render(line, True, (220, 100, 100)),
-            (20, 20 + i * 22)
-        )
-
-    for i, line in enumerate(legend_p2):
-        text = assets.legend_font.render(line, True, (100, 100, 220))
-        screen.blit(
-            text,
-            (WIDTH - text.get_width() - 20, 20 + i * 22)
-        )
-
-    food_legend_y = 120
-    screen.blit(assets.legend_font.render("FOOD TYPES:", True, (255, 255, 255)),
-                (WIDTH // 2 - 60, food_legend_y))
-
-    food_info = [
-    ("Good food (Eat)", "good"),
-    ("Bad food (Throw away)", "bad"),
-    ("Spicy food (Give away)", "spicy")
-]
-
-    for i, (label, food_type) in enumerate(food_info):
-        icon = assets.food_images[food_type]
-
-        screen.blit(
-            pygame.transform.scale(icon, (20, 20)),
-            (WIDTH // 2 - 80, food_legend_y + 30 + i * 26)
-        )
-
-        screen.blit(
-            assets.legend_font.render(label, True, (230, 230, 230)),
-            (WIDTH // 2 - 50, food_legend_y + 28 + i * 26)
-        )
-        
-    # SIZE TEXT
-
-    screen.blit(assets.font.render(str(p1.size), True, (255, 255, 255)), (160, 520))
-    screen.blit(assets.font.render(str(p2.size), True, (255, 255, 255)), (510, 520))
-
-    # RESULT
-    
-    if state == "RESULT":
+    elif game_state.state == "RESULT":
         winner = "DRAW"
         if p1.size > p2.size:
             winner = "PLAYER 1 WINS!"
         elif p2.size > p1.size:
             winner = "PLAYER 2 WINS!"
 
-        text = assets.font.render(winner, True, (255, 255, 255))
-        screen.blit(text, (WIDTH // 2 - text.get_width() // 2, HEIGHT // 2 - 20))
+        hud.draw_result(screen, winner)
 
     pygame.display.flip()
