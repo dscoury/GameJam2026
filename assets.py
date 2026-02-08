@@ -54,13 +54,13 @@ class Assets:
         # --- NEW REACTION IMAGES ---
         # Note: Ensure these files exist in the Character_Images folder
         self.p1_reactions = {
-            #"good": pygame.image.load(os.path.join(char_path, "sumo1_good.png")).convert_alpha(),
+            "good": pygame.image.load(os.path.join(char_path, "sumo1_good.png")).convert_alpha(),
             "bad":  pygame.image.load(os.path.join(char_path, "sumo1_sick.png")).convert_alpha(),
             "spic": pygame.image.load(os.path.join(char_path, "sumo1_spicy.png")).convert_alpha(),
         }
 
         self.p2_reactions = {
-            #"good": pygame.image.load(os.path.join(char_path, "sumo2_good.png")).convert_alpha(),
+            "good": pygame.image.load(os.path.join(char_path, "sumo2_good.png")).convert_alpha(),
             "bad":  pygame.image.load(os.path.join(char_path, "sumo2_sick.png")).convert_alpha(),
             "spic": pygame.image.load(os.path.join(char_path, "sumo2_spicy.png")).convert_alpha(),
         }

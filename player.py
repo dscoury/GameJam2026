@@ -69,8 +69,8 @@ class Player:
                 self.current_dish = None 
                 
                 # REACTION: GOOD
-                #self.current_reaction_img = self.reaction_images["good"]
-                #self.reaction_timer = 30 # Show for 30 frames
+                self.current_reaction_img = self.reaction_images["good"]
+                self.reaction_timer = 30 # Show for 30 frames
                 return 
 
             elif dish == "bad":
