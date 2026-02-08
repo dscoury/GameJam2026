@@ -102,99 +102,82 @@ chant_sound = None
 
 # GAME LOOP
 
+# main.py
+
 while True:
     clock.tick(FPS)
-
     events = pygame.event.get()
-
     for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()  
-
     keys = pygame.key.get_pressed()
 
-    # MENU STATE
-
+    # --- 1. MENU STATE ---
     if game_state.state == "MENU":
         menu.handle_input(events, game_state)
         menu.draw(BASE_SURFACE)
 
-    # PLAYING STATE
-
+    # --- 2. PLAYING STATE ---
     elif game_state.state == "PLAYING":
-        BASE_SURFACE.blit(background, (0, 0))
+        BASE_SURFACE.blit(background, (0, 0)) # Draw Restaurant BG
 
-        if not p1.current_dish:
-            p1.spawn_dish()
+        if not p1.current_dish: p1.spawn_dish()
+        if not p2.current_dish: p2.spawn_dish()
 
-        if not p2.current_dish:
-            p2.spawn_dish()
-
-        # Pass 'table' into handle_input
         p1.handle_input(keys, table)
         p2.handle_input(keys, table)
-
-        # Update the sliding animation
         p1.update_animation()
         p2.update_animation()
 
         result = game_state.update()
-
         if result == "CUTSCENE":
             zoom = 1.0
             cutscene.start(p1, p2, table)
+            if chant_sound: chant_sound.play(-1)
 
-            if chant_sound:
-                chant_sound.play(-1)
-
-    # CUTSCENE
-
+    # --- 3. CUTSCENE STATE ---
     elif game_state.state == "CUTSCENE":
-        BASE_SURFACE.blit(background, (0, 0))
+        BASE_SURFACE.blit(assets.outside_image, (0, 0)) # Draw Outside BG
+
         zoom = min(TARGET_ZOOM, zoom + 0.002)
         finished = cutscene.update(p1, p2)
 
         if finished:
             game_state.state = "RESULT"
             zoom = 1.0
+            if chant_sound: chant_sound.stop()
 
-            if chant_sound:
-                chant_sound.stop()
+    # 4. RESULT STATE
+    elif game_state.state == "RESULT":
+        BASE_SURFACE.blit(assets.outside_image, (0, 0)) # Draw Outside BG
+        
+        # Check for restart click
+        menu.handle_input(events, game_state)
 
-    # CLAMP SIZE
-
+    # CLAMP & DRAW CHARACTERS 
     p1.clamp()
     p2.clamp()
 
-    # DRAW WORLD
-
-    # DRAW WORLD
-    
-    # We want to draw the game world in PLAYING, CUTSCENE, and RESULT
+    # LOGIC: Draw Table ONLY in PLAYING, but Players ALWAYS
     if game_state.state in ("PLAYING", "CUTSCENE", "RESULT"):
-
-        # 1. Draw Table (Always visible in game)
-        table.draw(BASE_SURFACE)
-
-        # 2. Logic specific to PLAYING (Dishes + Alignment)
+        
+        # A. Draw Table & Dishes (PLAYING ONLY)
         if game_state.state == "PLAYING":
-            # Draw dishes only when playing
+            table.draw(BASE_SURFACE)
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
-
-            # Force vertical alignment to the table top
+            
+            # Align Y to table top
             character_y = table.table_rect.top
             p1.rect.midbottom = (p1.rect.centerx, character_y)
             p2.rect.midbottom = (p2.rect.centerx, character_y)
 
-        # 3. Draw Players (Always visible in game)
-        # INDENTED so they don't draw over the Menu!
+        # B. Draw Players (ALL STATES)
         p1.draw(BASE_SURFACE)
         p2.draw(BASE_SURFACE)
 
     # SHAKE AND ZOOM
-    
     shake_x = shake_y = 0
     if shake_timer > 0:
         shake_timer -= 1
@@ -202,14 +185,12 @@ while True:
         shake_y = random.randint(-shake_intensity, shake_intensity)
 
     scaled = pygame.transform.scale(
-        BASE_SURFACE,
-        (int(WIDTH * zoom), int(HEIGHT * zoom))
+        BASE_SURFACE, (int(WIDTH * zoom), int(HEIGHT * zoom))
     )
-
     rect = scaled.get_rect(center = (WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
     screen.blit(scaled, rect)
 
-    # HUD
+    # HUD & UI
     if game_state.state == "PLAYING":
         hud.draw_playing(screen, p1, p2)
         hud.draw_food_legend(screen)
@@ -222,5 +203,8 @@ while True:
             winner = "PLAYER 2 WINS!"
 
         hud.draw_result(screen, winner)
+        
+        # Draw the Restart Button
+        menu.draw_button(screen) 
 
     pygame.display.flip()

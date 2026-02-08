@@ -34,6 +34,14 @@ class Assets:
         h = self.woman_image.get_height() * scale_factor
         self.woman_image = pygame.transform.scale(self.woman_image, (w, h))
 
+        self.outside_image = pygame.image.load(
+            os.path.join(base_path, "PixelArt_GameJam/backgroundOutside.png")
+        ).convert_alpha()
+
+        self.outside_image = pygame.transform.scale(
+            self.outside_image, (WIDTH, HEIGHT)
+        )
+
         self.food_images = {
             "good": pygame.image.load("Food_Images/Vanlig.png").convert_alpha(),
             "bad": pygame.image.load("Food_Images/Rotten_0003.png").convert_alpha(),

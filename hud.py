@@ -41,7 +41,7 @@ class HUD:
         text = f.render(winner, True, (255, 255, 255))
         screen.blit(
             text,
-            (self.width // 2 - text.get_width() // 2, 280)
+            (self.width // 2 - text.get_width() // 2, 200)
         )
 
     def draw_food_legend(self, screen):
@@ -69,7 +69,7 @@ class HUD:
             )
 
             screen.blit(
-                lf.render(label, True, (230, 230, 230)),
+                lf.render(label, True, (0, 0, 0)),
                 (self.width // 2 - 50, food_legend_y + 28 + i * 26)
             )"""
 
