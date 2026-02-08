@@ -115,15 +115,19 @@ while True:
 
     if game_state.state == "PLAYING":
 
-        if not p1.current_dish:
+        if not p1.current_dish and p1.stun_timer == 0:
             p1.spawn_dish()
 
-        if not p2.current_dish:
+        if not p2.current_dish and p2.stun_timer == 0:
             p2.spawn_dish()
 
         # Pass 'table' into handle_input
         p1.handle_input(keys, table)
         p2.handle_input(keys, table)
+
+        # Update timers
+        p1.update() # <--- ADD THIS
+        p2.update() # <--- ADD THIS
 
         # Update the sliding animation
         p1.update_animation()
