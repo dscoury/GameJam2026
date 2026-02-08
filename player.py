@@ -1,39 +1,48 @@
-import random
 import pygame
-
+import random
 
 class Player:
-    def __init__(self, color, controls, dish_rect, image, start_size = 300):
+    def __init__(self, color, controls, dish_rect, image, reaction_images, start_size=300):
         self.color = color
-        self.image = image
+        self.base_image = image       # Store the default image
+        self.reaction_images = reaction_images # Store the dictionary of reactions
         self.controls = controls
         self.size = start_size
         self.rect = pygame.Rect(0, 0, self.size, self.size)
         self.dish_rect = dish_rect
         self.current_dish = None
         
-        # --- NEW ANIMATION VARIABLES ---
+        # Animation variables
         self.offset_x = 0
-        self.anim_state = None # None, "out", or "back"
+        self.anim_state = None 
         self.target_dist = 0
-        self.slide_speed = 25 # Speed of the slide
+        self.slide_speed = 25 
 
         self.stun_timer = 0 
-        self.input_locked = False # This flag prevents holding the button down
+        self.input_locked = False 
+
+        # --- REACTION LOGIC ---
+        self.reaction_timer = 0
+        self.current_reaction_img = None
 
     def spawn_dish(self):
         self.current_dish = random.choice(["good", "bad", "spicy"])
-        # Reset animation on spawn
         self.offset_x = 0
         self.anim_state = None
 
-    # --- Call this every frame! ---
     def update(self):
+        # Update Stun
         if self.stun_timer > 0:
             self.stun_timer -= 1
+        
+        # Update Reaction
+        if self.reaction_timer > 0:
+            self.reaction_timer -= 1
+        else:
+            self.current_reaction_img = None # Revert to normal face
 
     def handle_input(self, keys, table):
-        # 1. EXIT EARLY: If stunned, animating, or no dish, do nothing.
+        # 1. EXIT EARLY: If stunned, animating, or no dish
         if not self.current_dish or self.anim_state or self.stun_timer > 0:
             return
 
@@ -41,46 +50,53 @@ class Player:
         pressed_bad = keys[self.controls["bad"]]
         pressed_spicy = keys[self.controls["spicy"]]
 
-        # --- KEY RELEASE CHECK ---
-        # If NO keys are currently pressed, we unlock the input
+        # If NO keys are currently pressed, unlock input
         if not (pressed_good or pressed_bad or pressed_spicy):
             self.input_locked = False
             return
 
-        # If keys ARE pressed, but lock is still on (user hasn't let go yet), stop here.
+        # If keys pressed but lock is on, return
         if self.input_locked:
             return
 
-        # --- LOCK INPUT ---
-        # We found a button press and we weren't locked. 
-        # Lock it now so this action only happens once per press.
         self.input_locked = True
-
         dish = self.current_dish
-        action_taken = False
-
-        # --- 2. EATING LOGIC (The "W" or "UP" key) ---
+        
+        # --- 2. EATING LOGIC (Good/Up Key) ---
         if pressed_good:
-            action_taken = True
             if dish == "good":
                 self.size += 1
-                self.current_dish = None # Instant respawn
-                return 
-            elif dish == "bad":
-                self.size -= 1          # Size penalty
-                self.current_dish = None # Instant respawn (NO STUN)
-                return
-            elif dish == "spicy":
-                self.stun_timer = 30    # STUN ONLY ON SPICY
                 self.current_dish = None 
+                
+                # REACTION: GOOD
+                #self.current_reaction_img = self.reaction_images["good"]
+                #self.reaction_timer = 30 # Show for 30 frames
+                return 
+
+            elif dish == "bad":
+                self.size -= 1         
+                self.current_dish = None 
+                
+                # REACTION: BAD
+                self.current_reaction_img = self.reaction_images["bad"]
+                self.reaction_timer = 30 # Show for 30 frames
                 return
 
-        # --- 3. SORTING LOGIC (Correctly throwing away/giving away) ---
+            elif dish == "spicy":
+                self.stun_timer = 30    
+                self.current_dish = None 
+                
+                # REACTION: SPICY (Lasts exactly as long as stun)
+                self.current_reaction_img = self.reaction_images["spic"]
+                self.reaction_timer = 30 
+                return
+
+        # --- 3. SORTING LOGIC ---
         if (pressed_bad and dish == "bad") or (pressed_spicy and dish == "spicy"):
-            self.current_dish = None # Instant respawn
+            self.current_dish = None
             return
 
-        # --- 4. ANIMATION LOGIC (Pressing the wrong sorting key) ---
+        # --- 4. ANIMATION LOGIC (Wrong sorting) ---
         target_x = None
         
         # Pressed Trash key for Good or Spicy food
@@ -102,28 +118,25 @@ class Player:
         if not self.anim_state:
             return
 
-        # Phase 1: Slide OUT to target
+        # Phase 1: Slide OUT
         if self.anim_state == "out":
-            # Move towards target
             if abs(self.offset_x) < abs(self.target_dist):
                 direction = 1 if self.target_dist > 0 else -1
                 self.offset_x += direction * self.slide_speed
             else:
-                # Target reached, switch to sliding back
-                self.offset_x = self.target_dist # Clamp
+                self.offset_x = self.target_dist 
                 self.anim_state = "back"
         
-        # Phase 2: Slide BACK to plate
+        # Phase 2: Slide BACK
         elif self.anim_state == "back":
             if abs(self.offset_x) > 0:
                 direction = -1 if self.offset_x > 0 else 1
                 self.offset_x += direction * self.slide_speed
-                # Snap to 0 if we overshot
                 if (direction == -1 and self.offset_x < 0) or (direction == 1 and self.offset_x > 0):
                     self.offset_x = 0
             else:
                 self.offset_x = 0
-                self.anim_state = None # Animation finished
+                self.anim_state = None 
 
     def clamp(self):
         self.size = max(30, self.size)
@@ -132,8 +145,14 @@ class Player:
         self.rect.center = center
 
     def draw(self, surface):
+        # Decide which image to use: Reaction or Base
+        img_source = self.base_image
+        if self.reaction_timer > 0 and self.current_reaction_img:
+            img_source = self.current_reaction_img
+
+        # Scale it to current size
         img = pygame.transform.scale(
-            self.image,
+            img_source,
             self.rect.size
         )
         surface.blit(img, self.rect)
@@ -144,7 +163,6 @@ class Player:
 
         img = food_images[self.current_dish]
         
-        # ADD offset_x to the drawing position
         surface.blit(
             img,
             (
