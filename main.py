@@ -182,7 +182,6 @@ while True:
             if chant_sound:
                 chant_sound.play(-1)
 
-
     # CUTSCENE
 
     elif state == "CUTSCENE":
@@ -224,7 +223,6 @@ while True:
     p1.draw(BASE_SURFACE)
     p2.draw(BASE_SURFACE)
 
-
     # SHAKE AND ZOOM
     
     shake_x = shake_y = 0
@@ -243,7 +241,6 @@ while True:
     screen.blit(scaled, rect)
 
     # LEGEND AND INFO
-
     
     legend_p1 = [
         "PLAYER 1 (RED) - WASD",
