@@ -115,8 +115,13 @@ while True:
         if not p2.current_dish:
             p2.spawn_dish()
 
-        p1.handle_input(keys)
-        p2.handle_input(keys)
+        # Pass 'table' into handle_input
+        p1.handle_input(keys, table)
+        p2.handle_input(keys, table)
+
+        # Update the sliding animation
+        p1.update_animation()
+        p2.update_animation()
 
         result = game_state.update()
 
