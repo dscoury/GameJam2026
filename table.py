@@ -3,7 +3,7 @@ import pygame
 from config import *
 
 class Table:
-    def __init__(self, image):
+    def __init__(self, image, woman_image):
         # --- table dimensions ---
         table_width = 600
         table_height = 80
@@ -47,14 +47,17 @@ class Table:
         self.image_rect.midtop = self.table_rect.midtop
         self.image_rect.y -= TABLETOP_OFFSET  # Adjust to sit on top of table_rect
 
+        # UPDATE WOMAN SETUP
+        self.woman_image = woman_image
+        self.woman_rect = self.woman_image.get_rect()
+
         # --- shared Y for characters (top of table) ---
         character_y = self.table_rect.top
 
         # --- woman (centered) ---
-        self.woman_rect = pygame.Rect(0, 0, 50, 80)
         self.woman_rect.midbottom = (
             WIDTH // 2,
-            character_y
+            character_y + 10
         )
 
         # --- player positions (middle third) ---
@@ -75,4 +78,4 @@ class Table:
 
     def draw(self, surface):
         surface.blit(self.image, self.image_rect)
-        pygame.draw.rect(surface, WOMAN_COLOR, self.woman_rect)
+        surface.blit(self.woman_image, self.woman_rect)

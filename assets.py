@@ -25,6 +25,15 @@ class Assets:
             button, (button.get_width() * 2, button.get_height() * 2)
         )
 
+        self.woman_image = pygame.image.load(
+            os.path.join(base_path,"GIFS/chillLady.gif")
+        ).convert_alpha()
+
+        scale_factor = 3
+        w = self.woman_image.get_width() * scale_factor
+        h = self.woman_image.get_height() * scale_factor
+        self.woman_image = pygame.transform.scale(self.woman_image, (w, h))
+
         self.food_images = {
             "good": pygame.image.load("Food_Images/Vanlig.png").convert_alpha(),
             "bad": pygame.image.load("Food_Images/Rotten_0003.png").convert_alpha(),
