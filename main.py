@@ -21,7 +21,7 @@ legend_font = pygame.font.SysFont(None, 24)
 # CONSTANTS
 
 FPS = 60
-GAME_LENGTH = 20 * FPS # 10 sekunder
+GAME_LENGTH = 20 * FPS # 20 sekunder
 
 TIMING_Y = 420
 TIMING_HEIGHT = 24
@@ -75,12 +75,11 @@ p2 = Player(
     dish_rect=P2_DISH_RECT
 )
 
-FOOD_COLORS = {
 # FOOD IMAGES
 FOOD_IMAGES = {
-    "good": pygame.image.load(r"Food_Images\Vanlig.png").convert_alpha(),
-    "bad": pygame.image.load(r"Food_Images\Rotten_0003.png").convert_alpha(),
-    "spicy": pygame.image.load(r"Food_Images\Spicy.png").convert_alpha()
+    "good": pygame.image.load(r"Food_Images/Vanlig.png").convert_alpha(),
+    "bad": pygame.image.load(r"Food_Images/Rotten_0003.png").convert_alpha(),
+    "spicy": pygame.image.load(r"Food_Images/Spicy.png").convert_alpha()
 }
 
 # Optional: scale them to 30x30 to match your old rectangle size
@@ -163,10 +162,10 @@ while True:
         p1.handle_input(keys)
         p2.handle_input(keys)
 
-        timer -= 1
+        """timer -= 1
         if timer <= 0:
             state = "CUTSCENE"
-            foods.clear()
+            FOOD_IMAGES.clear()
 
             p1_rect.center = (WIDTH // 2 - 90, HEIGHT // 2)
             p2_rect.center = (WIDTH // 2 + 90, HEIGHT // 2)
@@ -175,11 +174,11 @@ while True:
             push_phase = "warmup"
 
             if chant_sound:
-                chant_sound.play(-1)
+                chant_sound.play(-1)"""
 
-        if timer % (10 * FPS) == 0:
+        """""if timer % (10 * FPS) == 0:
             food_speed += 0.5
-            spawn_delay = max(25, spawn_delay - 5)
+            spawn_delay = max(25, spawn_delay - 5)"""
 
     # CUTSCENE
 
