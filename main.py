@@ -3,6 +3,7 @@ import random
 import sys
 import math
 from player import Player
+from cutscene import CutsceneController
 
 # SETUP
 
@@ -58,6 +59,13 @@ P2_DISH_RECT = pygame.Rect(
     40, 40
 )
 
+# ZOOM
+zoom = 1.0
+TARGET_ZOOM = 1.15
+cutscene = CutsceneController(WIDTH)
+
+# PLAYER 1 AND 2
+
 p1 = Player(
     color=(200, 80, 80),
     controls={
@@ -91,16 +99,6 @@ FOOD_IMAGES = {
 # Optional: scale them to 30x30 to match your old rectangle size
 for key in FOOD_IMAGES:
     FOOD_IMAGES[key] = pygame.transform.scale(FOOD_IMAGES[key], (70, 70))
-
-
-
-
-
-"""FOOD_COLORS = {
-    "good": (80, 220, 120),     # green
-    "bad": (220, 80, 80),       # red
-    "spicy": (200, 200, 200)      # gray
-}"""
 
 MISS_PENALTY = {
     "good": 4,
@@ -171,10 +169,11 @@ while True:
         timer -= 1
         if timer <= 0:
             state = "CUTSCENE"
-
-            cutscene_timer = 0
-            push_phase = "warmup"
             zoom = 1.0
+            cutscene.start(p1, p2)
+
+            if chant_sound:
+                chant_sound.play(-1)
 
             # Move players to sumo starting positions
             p1.rect.center = (WIDTH // 2 - 80, HEIGHT // 2)
@@ -187,44 +186,16 @@ while True:
     # CUTSCENE
 
     elif state == "CUTSCENE":
-        cutscene_timer += 1
         zoom = min(TARGET_ZOOM, zoom + 0.002)
 
-        # --- WARMUP PHASE ---
-        if push_phase == "warmup":
-            offset = 3 if (cutscene_timer // 10) % 2 == 0 else -3
-            p1.rect.x += offset
-            p2.rect.x -= offset
+        finished = cutscene.update(p1, p2)
 
-            if cutscene_timer >= CUTSCENE_WARMUP_FRAMES:
-                push_phase = "final"
-                shake_timer = 30
-                shake_intensity = 8
-
-        # --- FINAL PUSH PHASE ---
-        elif push_phase == "final":
-            size_diff = abs(p1.size - p2.size)
-            force = BASE_PUSH_FORCE + size_diff // 10
-
-            if p1.size > p2.size:
-                # Player 1 pushes Player 2 right
-                p2.rect.x += force
-            elif p2.size > p1.size:
-                # Player 2 pushes Player 1 left
-                p1.rect.x -= force
-            else:
-                # Tie = slow mutual push
-                p1.rect.x -= BASE_PUSH_FORCE
-                p2.rect.x += BASE_PUSH_FORCE
-
-        # --- END CONDITION ---
-        if p1.rect.right < 0 or p2.rect.left > WIDTH:
+        if finished:
             state = "RESULT"
             zoom = 1.0
 
             if chant_sound:
                 chant_sound.stop()
-
 
     # CLAMP SIZE
 
@@ -307,8 +278,8 @@ while True:
 
     food_info = [
     ("Good food (Eat)", "good"),
-    ("Junk food (Pass)", "bad"),
-    ("Spicy food (Reject)", "spicy")
+    ("Bad food (Throw away)", "bad"),
+    ("Spicy food (Give away)", "spicy")
 ]
 
     for i, (label, food_type) in enumerate(food_info):
@@ -323,8 +294,6 @@ while True:
             legend_font.render(label, True, (230, 230, 230)),
             (WIDTH // 2 - 50, food_legend_y + 28 + i * 26)
         )
-
-
         
     # SIZE TEXT
 
