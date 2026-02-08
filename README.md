@@ -1,9 +1,12 @@
-# 🎮 RAMEN RUMBLE
+<p align="center">
+  <img src="PixelArt_GameJam/splashScreen.png" width="100%">
+</p>
+
+## 🎮 RAMEN RUMBLE
 Et raskt reaksjonsbasert spill der to sumobrytere konkurrerer om å spise seg størst før kampen. Velg riktig mat i høyt tempo. God mat gjør deg større, dårlig mat og spicy forsinker deg, størst vinner!!
 
 ## 🕹️ Slik spiller du
-WASD for spiller 1 (venstre)
-Piltaster for spiller 2 (høyre)
+WASD for spiller 1 (venstre) og Piltaster for spiller 2 (høyre)
 
 ## 🚀 Om spillet
 Du styrer en sumobryter som må reagere raskt på tallerkener med mat — spis det som gjør deg større, og send bort det som gjør deg svak eller treg.
@@ -17,8 +20,8 @@ Krever Python + pygame.
 git clone https://github.com/dscoury/GameJam2026.git
 Kjør `python main.py` i terminal.
 
-## 👥 Team
-- Christian
+## 👥 Team 
+- Christian 
 - Dylan
 - Linn
 - Sondre
