@@ -9,6 +9,7 @@ from assets import Assets
 from table import Table
 from hud import HUD
 from game_state import GameState
+from menu import Menu
 
 # SETUP
 
@@ -27,6 +28,7 @@ assets = Assets()
 table = Table(assets.table_image)
 hud = HUD(assets, WIDTH)
 game_state = GameState()
+menu = Menu(assets)
 
 # CONSTANTS
 
@@ -102,18 +104,26 @@ chant_sound = None
 
 while True:
     clock.tick(FPS)
-    BASE_SURFACE.blit(background, (0, 0))
 
-    for event in pygame.event.get():
+    events = pygame.event.get()
+
+    for event in events:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()  
 
     keys = pygame.key.get_pressed()
 
+    # MENU STATE
+
+    if game_state.state == "MENU":
+        menu.handle_input(events, game_state)
+        menu.draw(BASE_SURFACE)
+
     # PLAYING STATE
 
-    if game_state.state == "PLAYING":
+    elif game_state.state == "PLAYING":
+        BASE_SURFACE.blit(background, (0, 0))
 
         if not p1.current_dish:
             p1.spawn_dish()
@@ -135,18 +145,14 @@ while True:
             zoom = 1.0
             cutscene.start(p1, p2, table)
 
-
-            if chant_sound:
-                chant_sound.play(-1)
-
             if chant_sound:
                 chant_sound.play(-1)
 
     # CUTSCENE
 
     elif game_state.state == "CUTSCENE":
+        BASE_SURFACE.blit(background, (0, 0))
         zoom = min(TARGET_ZOOM, zoom + 0.002)
-
         finished = cutscene.update(p1, p2)
 
         if finished:
@@ -163,29 +169,29 @@ while True:
 
     # DRAW WORLD
 
-    if game_state.state in ("PLAYING", "CUTSCENE"):
+    # DRAW WORLD
+    
+    # We want to draw the game world in PLAYING, CUTSCENE, and RESULT
+    if game_state.state in ("PLAYING", "CUTSCENE", "RESULT"):
 
-        # PLAYER 1 AND 2 DISH
+        # 1. Draw Table (Always visible in game)
+        table.draw(BASE_SURFACE)
+
+        # 2. Logic specific to PLAYING (Dishes + Alignment)
         if game_state.state == "PLAYING":
-            table.draw(BASE_SURFACE)
+            # Draw dishes only when playing
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
 
-            # Keep players aligned with table during PLAYING
+            # Force vertical alignment to the table top
             character_y = table.table_rect.top
-
-            # Align players to the TOP edge of the table, same as the woman
-            character_y = table.table_rect.top
-
             p1.rect.midbottom = (p1.rect.centerx, character_y)
             p2.rect.midbottom = (p2.rect.centerx, character_y)
 
-            
-
-
-    
-    p1.draw(BASE_SURFACE)
-    p2.draw(BASE_SURFACE)
+        # 3. Draw Players (Always visible in game)
+        # INDENTED so they don't draw over the Menu!
+        p1.draw(BASE_SURFACE)
+        p2.draw(BASE_SURFACE)
 
     # SHAKE AND ZOOM
     

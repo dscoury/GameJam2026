@@ -1,10 +1,29 @@
 # assets.py
 import os
 import pygame
+from config import WIDTH, HEIGHT
 
 class Assets:
     def __init__(self):
         base_path = os.path.dirname(__file__)
+
+        self.menu_images = {
+            "background": pygame.image.load(
+                os.path.join(base_path,"PixelArt_GameJam/startScreen.png")
+            ).convert_alpha(),
+            "play_button": pygame.image.load(
+                os.path.join(base_path,"PixelArt_GameJam/startscreenPlaybutton.png")
+            ).convert_alpha()
+        }
+
+        self.menu_images["background"] = pygame.transform.scale(
+            self.menu_images["background"], (WIDTH, HEIGHT)
+        )
+
+        button = self.menu_images["play_button"]
+        self.menu_images["play_button"] = pygame.transform.scale(
+            button, (button.get_width() * 2, button.get_height() * 2)
+        )
 
         self.food_images = {
             "good": pygame.image.load("Food_Images/Vanlig.png").convert_alpha(),

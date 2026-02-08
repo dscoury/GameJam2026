@@ -3,7 +3,7 @@ from config import *
 
 class GameState:
     def __init__(self):
-        self.state = "PLAYING"
+        self.state = "MENU"
         self.timer = GAME_LENGTH
 
     def update(self):
