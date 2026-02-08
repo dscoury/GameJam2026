@@ -70,13 +70,10 @@ class Player:
             #Denne trenger vi ikke fordi jeg har lagt til en som gjør det samme over
 
             # Pressed GOOD key, but dish is Bad → penalize
-            #elif keys[self.controls["good"]] and dish != "good":
-            #    self.size -= 1
-
-
-
+            """elif keys[self.controls["good"]] and dish != "good":
+                self.size -= 1
         # Could slide to some neutral spot or just keep original plate
-                target_x = self.dish_rect.centerx + 50  # example
+                target_x = self.dish_rect.centerx + 50  # example"""
 
             # If a wrong move was detected, trigger animation
             if target_x is not None:

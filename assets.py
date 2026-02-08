@@ -21,6 +21,10 @@ class Assets:
                 os.path.join(base_path,"PixelArt_GameJam/Player_Sprites/sumo2-8_0001.png")
                 ).convert_alpha(),
         }
+        
+        self.table_image = pygame.image.load(
+            os.path.join(base_path,"PixelArt_GameJam/tableRestaurant.png")
+        ).convert_alpha()
 
         for key in self.food_images:
             self.food_images[key] = pygame.transform.scale(

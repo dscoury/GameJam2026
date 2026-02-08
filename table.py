@@ -3,10 +3,11 @@ import pygame
 from config import *
 
 class Table:
-    def __init__(self):
+    def __init__(self, image):
         # --- table dimensions ---
         table_width = 600
         table_height = 80
+        TABLETOP_OFFSET = 265
 
         # --- table in lower third ---
         self.table_rect = pygame.Rect(
@@ -16,7 +17,6 @@ class Table:
             table_height
         )
 
-        # --- trash bins (locked to table) ---
         self.trash_left = pygame.Rect(
             self.table_rect.left - 40,
             self.table_rect.top,
@@ -30,6 +30,22 @@ class Table:
             30,
             self.table_rect.height
         )
+        
+        # --- FULL visual table width (covers old trash areas) ---
+        visual_left = self.trash_left.left
+        visual_right = self.trash_right.right
+        visual_width = visual_right - visual_left
+
+        # --- scale table image to that width ---
+        scale = visual_width / image.get_width()
+        img_w = int(image.get_width() * scale)
+        img_h = int(image.get_height() * scale)
+
+        self.image = pygame.transform.scale(image, (img_w, img_h))
+
+        self.image_rect = self.image.get_rect()
+        self.image_rect.midtop = self.table_rect.midtop
+        self.image_rect.y -= TABLETOP_OFFSET  # Adjust to sit on top of table_rect
 
         # --- shared Y for characters (top of table) ---
         character_y = self.table_rect.top
@@ -57,9 +73,6 @@ class Table:
             food_y
         )
 
-
     def draw(self, surface):
-        pygame.draw.rect(surface, TABLE_COLOR, self.table_rect)
-        pygame.draw.rect(surface, TRASH_COLOR, self.trash_left)
-        pygame.draw.rect(surface, TRASH_COLOR, self.trash_right)
+        surface.blit(self.image, self.image_rect)
         pygame.draw.rect(surface, WOMAN_COLOR, self.woman_rect)

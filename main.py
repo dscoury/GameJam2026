@@ -24,7 +24,7 @@ background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 pygame.display.set_caption("Ramen Rumble")
 clock = pygame.time.Clock()
 assets = Assets()
-table = Table()
+table = Table(assets.table_image)
 hud = HUD(assets, WIDTH)
 game_state = GameState()
 
