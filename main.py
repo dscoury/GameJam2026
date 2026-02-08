@@ -13,7 +13,7 @@ pygame.mixer.init()
 WIDTH, HEIGHT = 800, 600
 BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sumo Growth DDR")
+pygame.display.set_caption("Ramen Rumble")
 clock = pygame.time.Clock()
 
 font = pygame.font.SysFont(None, 48)
@@ -122,24 +122,6 @@ shake_timer = 0
 zoom = 1.0
 TARGET_ZOOM = 1.15
 
-# SOUND CHANT
-
-"""def generate_chant():
-    sound = pygame.sndarray.make_sound(
-        (pygame.surfarray.array2d(
-            pygame.Surface((200, 1))
-        ) % 255).astype('int16')
-    )
-    return sound
-
-try:
-    chant_sound = generate_chant()
-
-except:
-    chant_sound = None"""
-
-chant_sound = None 
-
 # GAME LOOP
 
 while True:
@@ -172,16 +154,9 @@ while True:
             zoom = 1.0
             cutscene.start(p1, p2)
 
-            if chant_sound:
-                chant_sound.play(-1)
-
             # Move players to sumo starting positions
             p1.rect.center = (WIDTH // 2 - 80, HEIGHT // 2)
             p2.rect.center = (WIDTH // 2 + 80, HEIGHT // 2)
-
-            if chant_sound:
-                chant_sound.play(-1)
-
 
     # CUTSCENE
 
@@ -193,9 +168,6 @@ while True:
         if finished:
             state = "RESULT"
             zoom = 1.0
-
-            if chant_sound:
-                chant_sound.stop()
 
     # CLAMP SIZE
 
@@ -216,14 +188,24 @@ while True:
         # WOMAN (PLACEHOLDER)
         pygame.draw.rect(BASE_SURFACE, (200, 120, 200), WOMAN_RECT)
 
-        # PLAYER 1 AND 2 DISH
-        p1.draw_dish(BASE_SURFACE, FOOD_IMAGES)
-        p2.draw_dish(BASE_SURFACE, FOOD_IMAGES)
+        # PLAYER 1 DISH
+        if p1_dish:
+            pygame.draw.rect(
+                BASE_SURFACE,
+                FOOD_COLORS[p1_dish],
+                P1_DISH_RECT
+            )
 
+        # PLAYER 2 DISH
+        if p2_dish:
+            pygame.draw.rect(
+                BASE_SURFACE,
+                FOOD_COLORS[p2_dish],
+                P2_DISH_RECT
+            )
 
-    p1.draw(BASE_SURFACE)
-    p2.draw(BASE_SURFACE)
-
+    pygame.draw.rect(BASE_SURFACE, (200, 80, 80), p1_rect)
+    pygame.draw.rect(BASE_SURFACE, (80, 80, 220), p2_rect)
 
     # SHAKE AND ZOOM
     
