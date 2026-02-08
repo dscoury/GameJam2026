@@ -122,11 +122,20 @@ while True:
     elif game_state.state == "PLAYING":
         BASE_SURFACE.blit(background, (0, 0)) # Draw Restaurant BG
 
-        if not p1.current_dish: p1.spawn_dish()
-        if not p2.current_dish: p2.spawn_dish()
+        if not p1.current_dish and p1.stun_timer == 0:
+            p1.spawn_dish()
+
+        if not p2.current_dish and p2.stun_timer == 0:
+            p2.spawn_dish()
 
         p1.handle_input(keys, table)
         p2.handle_input(keys, table)
+
+        # Update timers
+        p1.update() # <--- ADD THIS
+        p2.update() # <--- ADD THIS
+
+        # Update the sliding animation
         p1.update_animation()
         p2.update_animation()
 
