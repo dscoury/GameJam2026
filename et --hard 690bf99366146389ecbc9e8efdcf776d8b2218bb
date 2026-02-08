@@ -1,0 +1,342 @@
+[33mcommit 690bf99366146389ecbc9e8efdcf776d8b2218bb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mPoengLogikk[m[33m, [m[1;31morigin/PoengLogikk[m[33m)[m
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 19:14:42 2026 +0100
+
+    Størrelse senkes når de spiser dårlig mat
+
+[33mcommit 49d5d11d0087b04a1690aada4b2b0efbe51d38b4[m[33m ([m[1;32mmain[m[33m)[m
+Merge: 5f93ce9 36b13f3
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 18:58:39 2026 +0100
+
+    Merge branch 'main' of https://github.com/dscoury/GameJam2026
+    
+    Jobbet i main med uhell, merger endringene jeg gjorde her
+    
+    La til en liten snutt i Player som sier at hvis maten er dårlig, men de
+    trykket på piltast for god, så skal du senke vekten emd en
+
+[33mcommit 5f93ce9facfff7fdde686aa8f22cdd61e8cf85c3[m
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 18:57:37 2026 +0100
+
+    Ny funksjon: Spise dårlig mat gjør at han går ned i vekt
+
+[33mcommit 36b13f33d590a66a99b4c9167c01c9b9cb79a3b6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 7c2becf 14f0a2d
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 18:47:28 2026 +0100
+
+    Merge branch 'main' of https://github.com/dscoury/GameJam2026
+
+[33mcommit 7c2becfb6ebe2e8ade485b708216be690e6e7b77[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 18:46:42 2026 +0100
+
+    Erstattet p1 og p2 firkant med png filene vi skal bruke
+
+[33mcommit 14f0a2dafd91b5541468b6b00c9cf0a3d36a47f5[m
+Merge: c85f1db ef7651b
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 17:13:14 2026 +0100
+
+    Merge branch 'main' of https://github.com/dscoury/GameJam2026
+
+[33mcommit ef7651b903e45ebdf743acc1c294dd1843a1e895[m
+Author: sondrhov <sondre1612@hotmail.com>
+Date:   Sun Feb 8 17:12:53 2026 +0100
+
+    Delete sumo1-haar.png
+
+[33mcommit fe0aca161f490b5ca858326f7a2146affd2c4514[m
+Author: sondrhov <sondre1612@hotmail.com>
+Date:   Sun Feb 8 17:12:00 2026 +0100
+
+    Sumo1
+
+[33mcommit f88b3a2cb40707dfde4410be7c09e68cc70ad147[m
+Author: sondrhov <sondre1612@hotmail.com>
+Date:   Sun Feb 8 17:11:11 2026 +0100
+
+    P1
+
+[33mcommit c85f1dbe55998d7491ba885f82686106feed32b4[m
+Merge: b874669 ec31272
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 17:11:00 2026 +0100
+
+    Merge branch 'main' of https://github.com/dscoury/GameJam2026
+    
+    Prover å pushe endringene mine, noen pusher samtidig, så de ba meg
+    skrive merge melding:wq
+    :wq
+
+[33mcommit ec312723324de6e678f38e8b18f1b8e156be1715[m
+Author: sondrhov <sondre1612@hotmail.com>
+Date:   Sun Feb 8 17:08:48 2026 +0100
+
+    Added P2 character
+
+[33mcommit 94215122cd2ff5280f40b07ca5948e64b3261c46[m
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sun Feb 8 17:07:44 2026 +0100
+
+    Create characters
+
+[33mcommit b874669022d844dd3cd7a1bee717f69d590ad8d3[m
+Merge: 01d247d 5e6135f
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 17:07:10 2026 +0100
+
+    Merge branch 'FikseCutscene'
+    Fiksa cutscene
+
+[33mcommit 5e6135f2926b4fb48f6d57bb2684abb98e0b2605[m[33m ([m[1;31morigin/FikseCutscene[m[33m, [m[1;32mFikseCutscene[m[33m)[m
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 17:05:36 2026 +0100
+
+    Fjerner bord of dama fra cutscene
+
+[33mcommit 01d247dd43148b4f9d9dc30ac27ed18449fbb0d6[m
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sun Feb 8 17:01:00 2026 +0100
+
+    Add .gitkeep to Sound_Effects/SpillLyder
+
+[33mcommit 3488144ba9d9336627dd7f10109e896428f4c07b[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 16:57:48 2026 +0100
+
+    La til bakgrunn og fjernet legend
+
+[33mcommit 8f6ee29f400cd6517ada931b14d503f5b0e0f756[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 16:43:07 2026 +0100
+
+    Merge branch 'final_layout'
+
+[33mcommit d03160bae77d6430d0eb298d73549f800f75f9ba[m
+Merge: 8055114 4c7346d
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 16:41:24 2026 +0100
+
+    Merging
+
+[33mcommit 4c7346d0b2f1a8e70ca691fe482d1892f08f5be6[m[33m ([m[1;31morigin/final_layout[m[33m)[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 16:25:59 2026 +0100
+
+    Flyttet bordet til nedre tredjedel, flyttet p1 og p2 til over bordet, må fikse siste cutscene slik at det bare er p1 og p2 til stede
+
+[33mcommit 80551146c7a8c311009c7b08484976f63ee5f3b2[m
+Author: christcd <christcd@uio.no>
+Date:   Sun Feb 8 16:13:02 2026 +0100
+
+    Rebounce og SLide animasjon på tellerken
+
+[33mcommit 21c952198476c90c37805cfc62866e536c0f20fe[m[33m ([m[1;32mSisteForsok[m[33m)[m
+Author: Linn Thoresen <linn140403@gmail.com>
+Date:   Sun Feb 8 15:46:12 2026 +0100
+
+    added lady gifs
+
+[33mcommit 91666068c32fe8d84d6d05e6583e8ba6cd318c1a[m
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sun Feb 8 15:44:57 2026 +0100
+
+    Add .gitkeep to GIFS directory
+
+[33mcommit 8565753f42eb5b8bc4f001367d2367b4bfe13344[m
+Author: Linn Thoresen <linn140403@gmail.com>
+Date:   Sun Feb 8 15:42:27 2026 +0100
+
+    added png files
+
+[33mcommit 9c26e2b2d6753c4a9d063c392c97305b4cfc9ac3[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 15:22:45 2026 +0100
+
+    La til hud og gamestate klasser
+
+[33mcommit e88e37da13b3e203a533cc99bf6e92d8693e283e[m[33m ([m[1;31morigin/hud[m[33m)[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 15:19:59 2026 +0100
+
+    La til hud og game_state klasser
+
+[33mcommit a443a69eea0ed197c21df15cde3033136863ee30[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 14:44:11 2026 +0100
+
+    Fikset mellomrom
+
+[33mcommit c24773c0a1167d9d725aa2ad1a525dd0fe371b33[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 14:40:25 2026 +0100
+
+    Usikker på hva dette er
+
+[33mcommit 0b87d39b4ea22c8c0914e00dff6295cbf9d2a842[m[33m ([m[1;31morigin/table[m[33m)[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 14:35:42 2026 +0100
+
+    Opprettet table klasse som har ansvar for å lage omgivelsene
+
+[33mcommit 1d66e3b456bd9a07789cdb9d47dda8e60b66aba3[m[33m ([m[1;31morigin/assets[m[33m)[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 14:19:46 2026 +0100
+
+    Opprettet assets klasse som håndterer sprites og fonts
+
+[33mcommit c48b42e2355867bded822a329f79da4b4232dd8d[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 13:47:47 2026 +0100
+
+    Fjernet noen ubrukte linjer
+
+[33mcommit 88da11d96b0e94d948a4a6e867e4f426e1470bb9[m
+Merge: 471c7ff 39e047a
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 13:33:10 2026 +0100
+
+    Merge branch 'dylan'
+
+[33mcommit 39e047a6ddae7d50cd6e499d539000d4656175d0[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 13:29:49 2026 +0100
+
+    La til en ny cutscene klasse som håndterer cutscene og zoom
+
+[33mcommit cd0b5770c98d58959a0808749723429f37289269[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 12:53:58 2026 +0100
+
+    Fikset koden slik at alt kjører, har riktig mat sprites, fikset results og fjernet enkelte linjer med unødvendig kode
+
+[33mcommit e7519502a4b2e548029c5a7b1cd28d3c05a97a77[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 12:21:15 2026 +0100
+
+    Fjernet ubrukte linjer
+
+[33mcommit 25522cf82702df2f8d0f5d86c18bb88fd8e7dc75[m
+Merge: 3aaab27 f13bb5e
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 11:21:27 2026 +0100
+
+    Merge branch 'dylan' of https://github.com/dscoury/GameJam2026 into dylan
+
+[33mcommit 3aaab27f1127d57a4dd731a62bea5dec69a17e45[m
+Author: dscoury <you@example.com>
+Date:   Sun Feb 8 11:20:09 2026 +0100
+
+    La til en ny klasse som håndterer p1 og p2
+
+[33mcommit 471c7ffd9d00e5e62acce93e1ad5926fb03dabaa[m
+Merge: c5a76b1 a05ac77
+Author: dscoury <you@example.com>
+Date:   Sat Feb 7 19:36:13 2026 +0100
+
+    Merge branch 'MergeDylanTest'
+
+[33mcommit a05ac77d5613fac093c7de34f260f4434beb3014[m[33m ([m[1;31morigin/MergeDylanTest[m[33m)[m
+Merge: aac0431 afc09f7
+Author: Dylan Coury <dylancoury@eduroam-193-157-248-228.wlan.uio.no>
+Date:   Sat Feb 7 19:28:25 2026 +0100
+
+    Vi klarte det Dylan, vi har merga, men filen ligger i feil branch, så jeg pusher og må comite igjen
+
+[33mcommit c5a76b133b8ddef197667baf32a4bb1a4bc98d2c[m
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sat Feb 7 19:10:14 2026 +0100
+
+    Add .DS_Store to .gitignore
+
+[33mcommit 0be1acb5d5cabe026baeb8754d9366276e602e10[m
+Merge: aac0431 f13bb5e
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sat Feb 7 18:59:41 2026 +0100
+
+    Merge pull request #1 from dscoury/dylan
+    
+    Fikset bord, søppel og matretter slik det skal være i det ferdige spi…
+
+[33mcommit f13bb5e8d2ad11ee0785581612c8acf8b3e07c56[m
+Merge: afc09f7 aac0431
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sat Feb 7 18:59:26 2026 +0100
+
+    Merge branch 'main' into dylan
+
+[33mcommit afc09f7ab68ab0e3c4e5cf004561f399414fb5d9[m
+Author: Dylan Coury <dylancoury@eduroam-193-157-248-228.wlan.uio.no>
+Date:   Sat Feb 7 18:33:48 2026 +0100
+
+    Fikset bord, søppel og matretter slik det skal være i det ferdige spillet
+
+[33mcommit aac04315784fe44b191a6c7de15cea25598c5980[m[33m ([m[1;31morigin/ImportPhotos[m[33m, [m[1;32mImportPhotos[m[33m)[m
+Author: christcd <christcd@uio.no>
+Date:   Sat Feb 7 18:14:12 2026 +0100
+
+    Erstattet kvadratene med faktiske bilder av maten
+
+[33mcommit 8833411df1e2170d17812305bde4179e23108532[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 16:21:51 2026 +0100
+
+    Fikset legend hvor raw ikke var erstattet med spicy
+
+[33mcommit 1ffa28b3cda8ea0d576ec330f5647d87cbf95a55[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 16:17:14 2026 +0100
+
+    Prøver på nytt, p1 og p2 skal sende mat riktig sted nå
+
+[33mcommit f78ff4afdd7aa0208d5cf081267afd289700a568[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 16:13:48 2026 +0100
+
+    Forandret på logikken, nå skal matrettene til p1 og p2 gå til riktig sted
+
+[33mcommit 5c1af1945f70a3dda65d0a1861a583d9f01b2397[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 15:02:36 2026 +0100
+
+    Rettet feil hvor PLAYER 2 ikke kunne vinne
+
+[33mcommit 9bf2a337ba0397f3c9c2a7606c0ef68141447f33[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 15:00:28 2026 +0100
+
+    La til ny slutt, vinner skubber taper av skjermen
+
+[33mcommit 1a789103a80b3eeee35571ba1dbb9d4b47f50204[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 13:53:54 2026 +0100
+
+    La til enda flere beskrivelser av koden
+
+[33mcommit b9f9a0ed980528979ff9e6bb88e439cd9af80857[m
+Merge: 69fe6b0 fb6f6a1
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 13:35:15 2026 +0100
+
+    Resolve merge conflict in main.py
+
+[33mcommit 69fe6b04ab89f9c959146ccc1b66b8203bb8ffd7[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 13:16:14 2026 +0100
+
+    La til beskrivelser av koden
+
+[33mcommit 39629d64d3e1ae2b1904d6a52717e0e04525ef83[m
+Author: Dylan Coury <dylancoury@HUAWEI_P20_Pro-3dac8d06d5.sio.no>
+Date:   Sat Feb 7 13:06:42 2026 +0100
+
+    Initial commit
+
+[33mcommit fb6f6a151ed2c5c6533436506e75cb814c5a6864[m[33m ([m[1;32mInstandFeedMekanikk[m[33m)[m
+Author: Dylan Coury <dylansebastian.dsc@gmail.com>
+Date:   Sat Feb 7 12:31:58 2026 +0100
+
+    Add files via upload
