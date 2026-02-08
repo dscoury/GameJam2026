@@ -31,7 +31,9 @@ class Player:
 
     def clamp(self):
         self.size = max(30, self.size)
+        center = self.rect.center
         self.rect.size = (self.size, self.size)
+        self.rect.center = center
 
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)

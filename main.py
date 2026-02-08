@@ -23,6 +23,9 @@ legend_font = pygame.font.SysFont(None, 24)
 FPS = 60
 GAME_LENGTH = 20 * FPS # 20 sekunder
 
+CUTSCENE_WARMUP_FRAMES = 120
+BASE_PUSH_FORCE = 2
+
 TIMING_Y = 420
 TIMING_HEIGHT = 24
 
@@ -74,6 +77,9 @@ p2 = Player(
     },
     dish_rect=P2_DISH_RECT
 )
+
+p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
+p2.rect.center = (WIDTH // 2 + 150, HEIGHT - 120)
 
 # FOOD IMAGES
 FOOD_IMAGES = {
@@ -161,24 +167,22 @@ while True:
 
         p1.handle_input(keys)
         p2.handle_input(keys)
-
-        """timer -= 1
+        
+        timer -= 1
         if timer <= 0:
             state = "CUTSCENE"
-            FOOD_IMAGES.clear()
-
-            p1_rect.center = (WIDTH // 2 - 90, HEIGHT // 2)
-            p2_rect.center = (WIDTH // 2 + 90, HEIGHT // 2)
 
             cutscene_timer = 0
             push_phase = "warmup"
+            zoom = 1.0
+
+            # Move players to sumo starting positions
+            p1.rect.center = (WIDTH // 2 - 80, HEIGHT // 2)
+            p2.rect.center = (WIDTH // 2 + 80, HEIGHT // 2)
 
             if chant_sound:
-                chant_sound.play(-1)"""
+                chant_sound.play(-1)
 
-        """""if timer % (10 * FPS) == 0:
-            food_speed += 0.5
-            spawn_delay = max(25, spawn_delay - 5)"""
 
     # CUTSCENE
 
@@ -186,30 +190,42 @@ while True:
         cutscene_timer += 1
         zoom = min(TARGET_ZOOM, zoom + 0.002)
 
+        # --- WARMUP PHASE ---
         if push_phase == "warmup":
-            offset = 4 if (cutscene_timer // 15) % 2 == 0 else -4
-            p1_rect.x += offset
-            p2_rect.x -= offset
+            offset = 3 if (cutscene_timer // 10) % 2 == 0 else -3
+            p1.rect.x += offset
+            p2.rect.x -= offset
 
-            if cutscene_timer > 120:
+            if cutscene_timer >= CUTSCENE_WARMUP_FRAMES:
                 push_phase = "final"
                 shake_timer = 30
-                shake_intensity = 10
+                shake_intensity = 8
 
-        else:
-            force = max(2, abs(p1_size - p2_size) // 10)
-            if p1_size > p2_size:
-                # PLAYER 1 pushes PLAYER 2 to the RIGHT
-                p2_rect.x += force
+        # --- FINAL PUSH PHASE ---
+        elif push_phase == "final":
+            size_diff = abs(p1.size - p2.size)
+            force = BASE_PUSH_FORCE + size_diff // 10
+
+            if p1.size > p2.size:
+                # Player 1 pushes Player 2 right
+                p2.rect.x += force
+            elif p2.size > p1.size:
+                # Player 2 pushes Player 1 left
+                p1.rect.x -= force
             else:
-                # PLAYER 2 pushes PLAYER 1 to the LEFT
-                p1_rect.x -= force
+                # Tie = slow mutual push
+                p1.rect.x -= BASE_PUSH_FORCE
+                p2.rect.x += BASE_PUSH_FORCE
 
-        if p1_rect.right < 0 or p2_rect.left > WIDTH:
+        # --- END CONDITION ---
+        if p1.rect.right < 0 or p2.rect.left > WIDTH:
             state = "RESULT"
+            zoom = 1.0
+
             if chant_sound:
                 chant_sound.stop()
-    
+
+
     # CLAMP SIZE
 
     p1.clamp()
@@ -261,15 +277,15 @@ while True:
     legend_p1 = [
         "PLAYER 1 (RED) - WASD",
         "W : Eat good food",
-        "D : Pass junk food",
-        "A : Reject spicy food"
+        "A : Throw away bad food",
+        "D : Give away spicy food"
     ]
 
     legend_p2 = [
         "PLAYER 2 (BLUE) - ARROWS",
         "UP    : Eat good food",
-        "RIGHT : Pass junk food",
-        "LEFT  : Reject spicy food"
+        "RIGHT : Throw away bad food",
+        "LEFT  : Give away spicy food"
     ]
 
     for i, line in enumerate(legend_p1):
@@ -319,9 +335,9 @@ while True:
     
     if state == "RESULT":
         winner = "DRAW"
-        if p1_size > p2_size:
+        if p1.size > p2.size:
             winner = "PLAYER 1 WINS!"
-        elif p2_size > p1_size:
+        elif p2.size > p1.size:
             winner = "PLAYER 2 WINS!"
 
         text = font.render(winner, True, (255, 255, 255))
