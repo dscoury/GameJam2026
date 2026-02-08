@@ -2,6 +2,7 @@ import pygame
 import random
 import sys
 import math
+from player import Player
 
 # SETUP
 
@@ -54,6 +55,26 @@ P2_DISH_RECT = pygame.Rect(
     40, 40
 )
 
+p1 = Player(
+    color=(200, 80, 80),
+    controls={
+        "good": pygame.K_w,
+        "bad": pygame.K_a,
+        "spicy": pygame.K_d
+    },
+    dish_rect=P1_DISH_RECT
+)
+
+p2 = Player(
+    color=(80, 80, 220),
+    controls={
+        "good": pygame.K_UP,
+        "bad": pygame.K_RIGHT,
+        "spicy": pygame.K_LEFT
+    },
+    dish_rect=P2_DISH_RECT
+)
+
 FOOD_COLORS = {
     "good": (80, 220, 120),     # green
     "bad": (220, 80, 80),       # red
@@ -66,14 +87,6 @@ MISS_PENALTY = {
     "spicy": 1
 }
 
-# PLAYER DATA
-
-p1_size = 50
-p2_size = 50
-
-p1_rect = pygame.Rect(0, 0, 50, 50)
-p2_rect = pygame.Rect(0, 0, 50, 50)
-
 # GAME STATE
 
 timer = GAME_LENGTH
@@ -81,14 +94,6 @@ state = "PLAYING"
 
 cutscene_timer = 0
 push_phase = "warmup"
-
-# DISHES SPAWNING
-
-p1_dish = None
-p2_dish = None
-
-def spawn_dish():
-    return random.choice(["good", "bad", "spicy"])
 
 # SCREEN SHAKE
 shake_intensity = 0
@@ -132,42 +137,15 @@ while True:
     # PLAYING STATE
 
     if state == "PLAYING":
-        if p1_dish is None:
-            p1_dish = spawn_dish()
 
-        if p2_dish is None:
-            p2_dish = spawn_dish()
+        if not p1.current_dish:
+            p1.spawn_dish()
 
-        # PLAYER 1 (left)
-        if p1_dish is not None:
+        if not p2.current_dish:
+            p2.spawn_dish()
 
-            if p1_dish == "good" and keys[pygame.K_w]:
-                p1_size += 5
-                p1_dish = None
-
-            elif p1_dish == "bad" and keys[pygame.K_a]:
-                # TRASH (left)
-                p1_dish = None
-
-            elif p1_dish == "spicy" and keys[pygame.K_d]:
-                # WOMAN (towards center)
-                p1_dish = None
-            
-        # PLAYER 2 (right)
-
-        if p2_dish is not None:
-
-            if p2_dish == "good" and keys[pygame.K_UP]:
-                p2_size += 5
-                p2_dish = None
-
-            elif p2_dish == "bad" and keys[pygame.K_RIGHT]:
-                # TRASH (right)
-                p2_dish = None
-
-            elif p2_dish == "spicy" and keys[pygame.K_LEFT]:
-                # WOMAN (towards center)
-                p2_dish = None
+        p1.handle_input(keys)
+        p2.handle_input(keys)
 
         timer -= 1
         if timer <= 0:
@@ -219,11 +197,8 @@ while True:
     
     # CLAMP SIZE
 
-    p1_size = max(30, p1_size)
-    p2_size = max(30, p2_size)
-
-    p1_rect.size = (p1_size, p1_size)
-    p2_rect.size = (p2_size, p2_size)
+    p1.clamp()
+    p2.clamp()
 
     # DRAW WORLD
 
@@ -239,24 +214,14 @@ while True:
         # WOMAN (PLACEHOLDER)
         pygame.draw.rect(BASE_SURFACE, (200, 120, 200), WOMAN_RECT)
 
-        # PLAYER 1 DISH
-        if p1_dish:
-            pygame.draw.rect(
-                BASE_SURFACE,
-                FOOD_COLORS[p1_dish],
-                P1_DISH_RECT
-            )
+        # PLAYER 1 AND 2 DISH
+        p1.draw_dish(BASE_SURFACE, FOOD_IMAGES)
+        p2.draw_dish(BASE_SURFACE, FOOD_IMAGES)
 
-        # PLAYER 2 DISH
-        if p2_dish:
-            pygame.draw.rect(
-                BASE_SURFACE,
-                FOOD_COLORS[p2_dish],
-                P2_DISH_RECT
-            )
 
-    pygame.draw.rect(BASE_SURFACE, (200, 80, 80), p1_rect)
-    pygame.draw.rect(BASE_SURFACE, (80, 80, 220), p2_rect)
+    p1.draw(BASE_SURFACE)
+    p2.draw(BASE_SURFACE)
+
 
     # SHAKE AND ZOOM
     
@@ -326,8 +291,8 @@ while True:
 
     # SIZE TEXT
 
-    screen.blit(font.render(str(p1_size), True, (255, 255, 255)), (160, 520))
-    screen.blit(font.render(str(p2_size), True, (255, 255, 255)), (510, 520))
+    screen.blit(font.render(str(p1.size), True, (255, 255, 255)), (160, 520))
+    screen.blit(font.render(str(p2.size), True, (255, 255, 255)), (510, 520))
 
     # RESULT
     
