@@ -33,10 +33,18 @@ class Player:
 
         # 1. HANDLE CORRECT MOVES (Existing Logic)
         if dish == "good" and keys[self.controls["good"]]:
-            self.size += 5
+            self.size += 1
             self.current_dish = None
+
+        elif dish == "bad" and keys[self.controls["good"]]:
+            self.size -= 1  # Decrease size
+            self.current_dish = None  # Clear dish immediately (spawns new one next frame)
+
+
+
         elif dish == "bad" and keys[self.controls["bad"]]:
             self.current_dish = None
+            #self.size -= 1
         elif dish == "spicy" and keys[self.controls["spicy"]]:
             self.current_dish = None
             
@@ -55,6 +63,12 @@ class Player:
             # Case: Player pressed LADY key (Spicy), but food is Good or Bad
             elif keys[self.controls["spicy"]] and dish != "spicy":
                 target_x = table.woman_rect.centerx
+
+            # Pressed GOOD key, but dish is Bad → penalize
+            elif keys[self.controls["good"]] and dish != "good":
+                self.size -= 1
+        # Could slide to some neutral spot or just keep original plate
+                target_x = self.dish_rect.centerx + 50  # example
 
             # If a wrong move was detected, trigger animation
             if target_x is not None:
