@@ -127,15 +127,11 @@ while True:
 
         if result == "CUTSCENE":
             zoom = 1.0
-            cutscene.start(p1, p2)
+            cutscene.start(p1, p2, table)
 
 
             if chant_sound:
                 chant_sound.play(-1)
-
-            # Move players to sumo starting positions
-            p1.rect.center = (WIDTH // 2 - 80, HEIGHT // 2)
-            p2.rect.center = (WIDTH // 2 + 80, HEIGHT // 2)
 
             if chant_sound:
                 chant_sound.play(-1)
@@ -161,12 +157,23 @@ while True:
 
     # DRAW WORLD
 
-    if game_state.state == "PLAYING":
+    if game_state.state in ("PLAYING", "CUTSCENE"):
         table.draw(BASE_SURFACE)
 
         # PLAYER 1 AND 2 DISH
-        p1.draw_dish(BASE_SURFACE, assets.food_images)
-        p2.draw_dish(BASE_SURFACE, assets.food_images)
+        if game_state.state == "PLAYING":
+            p1.draw_dish(BASE_SURFACE, assets.food_images)
+            p2.draw_dish(BASE_SURFACE, assets.food_images)
+
+            # Keep players aligned with table during PLAYING
+            character_y = table.table_rect.top
+
+            # Align players to the TOP edge of the table, same as the woman
+            character_y = table.table_rect.top
+
+            p1.rect.midbottom = (p1.rect.centerx, character_y)
+            p2.rect.midbottom = (p2.rect.centerx, character_y)
+
 
 
     p1.draw(BASE_SURFACE)
@@ -185,7 +192,7 @@ while True:
         (int(WIDTH * zoom), int(HEIGHT * zoom))
     )
 
-    rect = scaled.get_rect(center=(WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
+    rect = scaled.get_rect(center = (WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
     screen.fill((0, 0, 0))
     screen.blit(scaled, rect)
 

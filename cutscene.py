@@ -5,13 +5,23 @@ class CutsceneController:
         self.phase = "warmup"
         self.active = False
 
-    def start(self, p1, p2):
+    def start(self, p1, p2, table):
         self.timer = 0
         self.phase = "warmup"
         self.active = True
 
-        p1.rect.center = (self.width // 2 - 80, 300)
-        p2.rect.center = (self.width // 2 + 80, 300)
+        player_y = table.woman_rect.centery
+
+        p1.rect.midright = (
+            table.woman_rect.left - 20,
+            player_y
+        )
+
+        p2.rect.midleft = (
+            table.woman_rect.right + 20,
+            player_y
+        )
+
 
     def update(self, p1, p2):
         self.timer += 1
