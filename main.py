@@ -54,7 +54,8 @@ p1 = Player(
         "bad": pygame.K_a,
         "spicy": pygame.K_d
     },
-    dish_rect = table.p1_dish_rect
+    dish_rect = table.p1_dish_rect,
+    image = assets.player_images["p1"]
 )
 
 p2 = Player(
@@ -64,7 +65,8 @@ p2 = Player(
         "bad": pygame.K_RIGHT,
         "spicy": pygame.K_LEFT
     },
-    dish_rect = table.p2_dish_rect
+    dish_rect = table.p2_dish_rect,
+    image = assets.player_images["p2"]
 )
 
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)

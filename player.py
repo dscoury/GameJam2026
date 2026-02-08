@@ -3,8 +3,9 @@ import pygame
 
 
 class Player:
-    def __init__(self, color, controls, dish_rect, start_size=50):
+    def __init__(self, color, controls, dish_rect, image, start_size = 300):
         self.color = color
+        self.image = image
         self.controls = controls
         self.size = start_size
         self.rect = pygame.Rect(0, 0, self.size, self.size)
@@ -96,7 +97,11 @@ class Player:
         self.rect.center = center
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self.color, self.rect)
+        img = pygame.transform.scale(
+            self.image,
+            self.rect.size
+        )
+        surface.blit(img, self.rect)
 
     def draw_dish(self, surface, food_images):
         if not self.current_dish:
