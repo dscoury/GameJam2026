@@ -44,6 +44,8 @@ TRASH_LEFT_RECT = pygame.Rect(
 TRASH_RIGHT_RECT = pygame.Rect(
     TABLE_RECT.right + 10, TABLE_RECT.top, 30, TABLE_RECT.height)
 
+
+
 WOMAN_RECT = pygame.Rect(
     TABLE_RECT.centerx - 25, TABLE_RECT.bottom + 10, 50, 80)
 
@@ -58,6 +60,20 @@ P2_DISH_RECT = pygame.Rect(
     TABLE_RECT.centery - 20,
     40, 40
 )
+
+
+P1_TARGETS = {
+    "bad": TRASH_LEFT_RECT.center,
+    "spicy": WOMAN_RECT.center
+}
+
+P2_TARGETS = {
+    "bad": TRASH_RIGHT_RECT.center,
+    "spicy": WOMAN_RECT.center
+}
+
+
+
 
 # ZOOM
 zoom = 1.0
@@ -146,6 +162,7 @@ while True:
     clock.tick(FPS)
     BASE_SURFACE.fill((25, 25, 30))
 
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -163,8 +180,15 @@ while True:
         if not p2.current_dish:
             p2.spawn_dish()
 
-        p1.handle_input(keys)
-        p2.handle_input(keys)
+        p1.handle_input(keys, P1_TARGETS)
+        p2.handle_input(keys, P2_TARGETS)
+
+
+        p1.update_dish()
+        p2.update_dish()
+
+        
+
         
         timer -= 1
         if timer <= 0:
@@ -185,7 +209,7 @@ while True:
 
     # CUTSCENE
 
-    elif state == "CUTSCENE":
+    elif state == "CUTSCENE":   
         zoom = min(TARGET_ZOOM, zoom + 0.002)
 
         finished = cutscene.update(p1, p2)
