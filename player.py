@@ -65,9 +65,16 @@ class Player:
             elif keys[self.controls["spicy"]] and dish != "spicy":
                 target_x = table.woman_rect.centerx
 
+
+
+            #Denne trenger vi ikke fordi jeg har lagt til en som gjør det samme over
+
             # Pressed GOOD key, but dish is Bad → penalize
-            elif keys[self.controls["good"]] and dish != "good":
-                self.size -= 1
+            #elif keys[self.controls["good"]] and dish != "good":
+            #    self.size -= 1
+
+
+
         # Could slide to some neutral spot or just keep original plate
                 target_x = self.dish_rect.centerx + 50  # example
 
