@@ -31,3 +31,7 @@ Kjør `python main.py` i terminal.
 
 🕒 50 timer  
 🎯 Jam: IFI - GameJam 2026
+
+<p align="center">
+  <img src="PixelArt_GameJam/poster1RamenRumble.png" width="100%">
+</p>
