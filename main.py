@@ -11,11 +11,13 @@ from hud import HUD
 from game_state import GameState
 from menu import Menu
 
+# Two players compete in eating the right food to grow and win
+
 # SETUP
+pygame.init() 
+pygame.mixer.init() 
 
-pygame.init()
-pygame.mixer.init()
-
+# screen setup 
 BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 background = pygame.image.load(
@@ -31,7 +33,6 @@ game_state = GameState()
 menu = Menu(assets)
 
 # CONSTANTS
-
 CUTSCENE_WARMUP_FRAMES = 120
 BASE_PUSH_FORCE = 2
 
@@ -47,8 +48,7 @@ LANES = {
 zoom = 1.0
 cutscene = CutsceneController(WIDTH)
 
-# PLAYER 1 AND 2
-
+# MAKING PLAYER 1 AND 2
 p1 = Player(
     color = (200, 80, 80),
     controls = {
@@ -58,7 +58,7 @@ p1 = Player(
     },
     dish_rect = table.p1_dish_rect,
     image = assets.player_images["p1"],
-    reaction_images = assets.p1_reactions # <--- Passed Reactions
+    reaction_images = assets.p1_reactions 
 )
 
 p2 = Player(
@@ -70,7 +70,7 @@ p2 = Player(
     },
     dish_rect = table.p2_dish_rect,
     image = assets.player_images["p2"],
-    reaction_images = assets.p2_reactions # <--- Passed Reactions
+    reaction_images = assets.p2_reactions 
 )
 
 p1.rect.center = (WIDTH // 2 - 150, HEIGHT - 120)
@@ -86,7 +86,6 @@ MISS_PENALTY = {
 }
 
 # GAME STATE
-
 cutscene_timer = 0
 push_phase = "warmup"
 
@@ -99,9 +98,11 @@ zoom = 1.0
 TARGET_ZOOM = 1.15
 
 chant_sound = None 
+previous_state = game_state.state
+
+
 
 # GAME LOOP
-
 # main.py
 
 while True:
@@ -122,6 +123,8 @@ while True:
     elif game_state.state == "PLAYING":
         BASE_SURFACE.blit(background, (0, 0))
 
+        table.draw(BASE_SURFACE)
+
         if not p1.current_dish and p1.stun_timer == 0:
             p1.spawn_dish()
 
@@ -132,8 +135,6 @@ while True:
         p2.handle_input(keys, table)
 
         # Update timers
-        p1.update() 
-        p2.update() 
         p1.update() 
         p2.update() 
 
@@ -160,17 +161,41 @@ while True:
 
     # RESULT STATE
     elif game_state.state == "RESULT":
-        BASE_SURFACE.blit(assets.outside_image, (0, 0)) 
-        
-        # Check for restart click
+
+        if p1.size > p2.size:
+            result_key = "P1"
+        elif p2.size > p1.size:
+            result_key = "P2"
+        else:
+            result_key = "DRAW"
+
+        BASE_SURFACE.blit(assets.result_images[result_key], (0, 0))
+
+        menu.draw_button(BASE_SURFACE)
+
+
+        # hanlding input
         menu.handle_input(events, game_state)
+
+        if game_state.state == "PLAYING":
+
+            # Reset players
+            p1.reset((WIDTH // 2 - 150, HEIGHT - 120))
+            p2.reset((WIDTH // 2 + 150, HEIGHT - 120))
+
+            # Reset scene
+            zoom = 1.0
+            cutscene_timer = 0
+            push_phase = "warmup"
+
 
     # CLAMP & DRAW CHARACTERS 
     p1.clamp()
     p2.clamp()
 
-    if game_state.state in ("PLAYING", "CUTSCENE", "RESULT"):
+    if game_state.state in ("PLAYING", "CUTSCENE"):
         
+
         if game_state.state == "PLAYING":
             p1.draw_dish(BASE_SURFACE, assets.food_images)
             p2.draw_dish(BASE_SURFACE, assets.food_images)
@@ -195,21 +220,16 @@ while True:
     rect = scaled.get_rect(center = (WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
     screen.blit(scaled, rect)
 
-    # HUD & UI
-    if game_state.state == "PLAYING":
-        hud.draw_playing(screen, p1, p2)
-        hud.draw_food_legend(screen)
+    # Detect state change to PLAYING
+    if game_state.state == "PLAYING" and previous_state != "PLAYING":
+        p1.reset((WIDTH // 2 - 150, HEIGHT - 120))
+        p2.reset((WIDTH // 2 + 150, HEIGHT - 120))
 
-    elif game_state.state == "RESULT":
-        winner = "DRAW"
-        if p1.size > p2.size:
-            winner = "PLAYER 1 WINS!"
-        elif p2.size > p1.size:
-            winner = "PLAYER 2 WINS!"
+        zoom = 1.0
+        cutscene_timer = 0
+        push_phase = "warmup"
 
-        hud.draw_result(screen, winner)
-        
-        # Draw the Restart Button
-        menu.draw_button(screen) 
+    previous_state = game_state.state
+
 
     pygame.display.flip()
