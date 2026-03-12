@@ -31,7 +31,7 @@ class Player:
         self.offset_x = 0
         self.anim_state = None 
         self.target_dist = 0
-        self.slide_speed = 900
+        self.slide_speed = 1200
 
         self.stun_timer = 0 
         self.input_locked = False 
