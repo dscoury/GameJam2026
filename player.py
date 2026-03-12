@@ -100,12 +100,12 @@ class Player:
                 return
 
             elif dish == "spicy":
-                self.stun_timer = 45 # length of stun     
+                self.stun_timer = 30 # length of stun     
                 self.current_dish = None 
                 
                 # REACTION: SPICY (Lasts exactly as long as stun)
                 self.current_reaction_img = self.reaction_images["spicy"]
-                self.reaction_timer = 45
+                self.reaction_timer = 30
                 return
 
 
