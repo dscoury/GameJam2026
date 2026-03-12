@@ -17,14 +17,14 @@ import asyncio
 
 # SETUP
 pygame.init() 
-pygame.mixer.init() 
+# pygame.mixer.init() 
 
 # screen setup 
 BASE_SURFACE = pygame.Surface((WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 background = pygame.image.load(
     "PixelArt_GameJam/backgroundRestaurant.png"
-).convert_alpha()
+).convert()
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 pygame.display.set_caption("Ramen Rumble")
 clock = pygame.time.Clock()
@@ -219,11 +219,15 @@ async def main():
             shake_x = random.randint(-shake_intensity, shake_intensity)
             shake_y = random.randint(-shake_intensity, shake_intensity)
 
-        scaled = pygame.transform.scale(
-            BASE_SURFACE, (int(WIDTH * zoom), int(HEIGHT * zoom))
-        )
-        rect = scaled.get_rect(center = (WIDTH // 2 + shake_x, HEIGHT // 2 + shake_y))
-        screen.blit(scaled, rect)
+        if zoom == 1.0:
+            screen.blit(BASE_SURFACE, (0,0))
+        else:
+            scaled = pygame.transform.scale(
+                BASE_SURFACE, (int(WIDTH * zoom), int(HEIGHT * zoom))
+            )
+            rect = scaled.get_rect(center=(WIDTH//2 + shake_x, HEIGHT//2 + shake_y))
+            screen.blit(scaled, rect)
+
 
         # Detect state change to PLAYING
         if game_state.state == "PLAYING" and previous_state != "PLAYING":

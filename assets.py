@@ -11,7 +11,7 @@ class Assets:
         self.menu_images = {
             "background": pygame.image.load(
                 os.path.join(base_path, "PixelArt_GameJam/startScreen.png")
-            ).convert_alpha(),
+            ).convert(),
             "play_button": pygame.image.load(
                 os.path.join(base_path, "PixelArt_GameJam/startscreenPlaybutton.png")
             ).convert_alpha()
@@ -29,7 +29,7 @@ class Assets:
 
         self.outside_image = pygame.image.load(
             os.path.join(base_path, "PixelArt_GameJam/backgroundOutside.png")
-        ).convert_alpha()
+        ).convert()
 
         self.outside_image = pygame.transform.scale(
             self.outside_image, (WIDTH, HEIGHT)
@@ -62,9 +62,9 @@ class Assets:
         }
 
         self.result_images = {
-            "P1": pygame.image.load("PixelArt_GameJam/winnerOne.png").convert_alpha(),
-            "P2": pygame.image.load("PixelArt_GameJam/winnerTwo.png").convert_alpha(),
-            "DRAW": pygame.image.load("PixelArt_GameJam/drawScreen.png").convert_alpha()
+            "P1": pygame.image.load("PixelArt_GameJam/winnerOne.png").convert(),
+            "P2": pygame.image.load("PixelArt_GameJam/winnerTwo.png").convert(),
+            "DRAW": pygame.image.load("PixelArt_GameJam/drawScreen.png").convert()
         }
         for key in self.result_images:
             self.result_images[key] = pygame.transform.scale(

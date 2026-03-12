@@ -12,6 +12,9 @@ class Player:
         #player variables
         self.color = color
         self.base_image = image       # Store the default image 
+        self.cached_image = None
+        self.cached_size = None
+        self.cached_source = None
         self.reaction_images = reaction_images # Store the dictionary of reactions
         self.reaction_timer = 0 
         self.current_reaction_img = None
@@ -178,17 +181,24 @@ class Player:
         self.rect.center = center
 
     def draw(self, surface):
-        # Decide which image to use: Reaction or Base
+
         img_source = self.base_image
         if self.reaction_timer > 0 and self.current_reaction_img:
             img_source = self.current_reaction_img
 
-        # Scale it to current size
-        img = pygame.transform.scale(
-            img_source,
-            self.rect.size
-        )
-        surface.blit(img, self.rect)
+        # Only rescale if size OR image changed
+        if (
+            self.cached_size != self.rect.size
+            or self.cached_source != img_source
+            or self.cached_image is None
+        ):
+            self.cached_image = pygame.transform.scale(img_source, self.rect.size)
+            self.cached_size = self.rect.size
+            self.cached_source = img_source
+
+        surface.blit(self.cached_image, self.rect)
+
+
 
     def draw_dish(self, surface, food_images):
         # Show dish
@@ -223,3 +233,5 @@ class Player:
 
         self.reaction_timer = 0
         self.current_reaction_img = None
+        self.cached_image = None
+
