@@ -31,7 +31,7 @@ class Player:
         self.offset_x = 0
         self.anim_state = None 
         self.target_dist = 0
-        self.slide_speed = 25 
+        self.slide_speed = 35
 
         self.stun_timer = 0 
         self.input_locked = False 
@@ -87,7 +87,7 @@ class Player:
                 
                 # REACTION: GOOD
                 self.current_reaction_img = self.reaction_images["good"]
-                self.reaction_timer = 30 # Show for 30 frames
+                self.reaction_timer = 15 # Show for 30 frames
                 return 
 
             elif dish == "bad":
@@ -96,16 +96,16 @@ class Player:
                 
                 # REACTION: BAD
                 self.current_reaction_img = self.reaction_images["bad"]
-                self.reaction_timer = 30 # Show for 30 frames
+                self.reaction_timer = 15 # Show for 30 frames
                 return
 
             elif dish == "spicy":
-                self.stun_timer = 75 # length of stun     
+                self.stun_timer = 45 # length of stun     
                 self.current_dish = None 
                 
                 # REACTION: SPICY (Lasts exactly as long as stun)
                 self.current_reaction_img = self.reaction_images["spicy"]
-                self.reaction_timer = 30 
+                self.reaction_timer = 45
                 return
 
 
