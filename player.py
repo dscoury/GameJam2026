@@ -31,7 +31,7 @@ class Player:
         self.offset_x = 0
         self.anim_state = None 
         self.target_dist = 0
-        self.slide_speed = 40
+        self.slide_speed = 900
 
         self.stun_timer = 0 
         self.input_locked = False 
@@ -137,7 +137,7 @@ class Player:
             self.target_dist = target_x - self.dish_rect.centerx
 
 
-    def update_animation(self):
+    def update_animation(self, dt):
         if not self.anim_state:
             return
 
@@ -145,7 +145,7 @@ class Player:
         if self.anim_state == "out":
             if abs(self.offset_x) < abs(self.target_dist):
                 direction = 1 if self.target_dist > 0 else -1
-                self.offset_x += direction * self.slide_speed
+                self.offset_x += direction * self.slide_speed * dt
             else:
                 self.offset_x = self.target_dist
 

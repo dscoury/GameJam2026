@@ -111,7 +111,8 @@ async def main():
 
 
     while True:
-        clock.tick(FPS)
+        dt = clock.tick(FPS) / 1000
+
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -143,8 +144,9 @@ async def main():
             p1.update() 
             p2.update() 
 
-            p1.update_animation()
-            p2.update_animation()
+            p1.update_animation(dt)
+            p2.update_animation(dt)
+
 
             result = game_state.update()
             if result == "CUTSCENE":
