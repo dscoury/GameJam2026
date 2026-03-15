@@ -87,7 +87,7 @@ class Player:
                 
                 # REACTION: GOOD
                 self.current_reaction_img = self.reaction_images["good"]
-                self.reaction_timer = 15 # Show for 30 frames
+                self.reaction_timer = 10 
                 return 
 
             elif dish == "bad":
@@ -96,16 +96,16 @@ class Player:
                 
                 # REACTION: BAD
                 self.current_reaction_img = self.reaction_images["bad"]
-                self.reaction_timer = 15 # Show for 30 frames
+                self.reaction_timer = 10 
                 return
 
             elif dish == "spicy":
-                self.stun_timer = 30 # length of stun     
+                self.stun_timer = 15 # length of stun     
                 self.current_dish = None 
                 
                 # REACTION: SPICY (Lasts exactly as long as stun)
                 self.current_reaction_img = self.reaction_images["spicy"]
-                self.reaction_timer = 30
+                self.reaction_timer = 15
                 return
 
 

@@ -1,4 +1,5 @@
-from config import HEIGHT, WIDTH
+from config import HEIGHT, WIDTH, FPS
+
 
 class CutsceneController:
     def __init__(self, width):
@@ -30,13 +31,13 @@ class CutsceneController:
             p1.rect.right = center_x + jitter
             p2.rect.left = center_x - jitter 
 
-            if self.timer >= 120:
+            if self.timer >= 3 * FPS:
                 self.phase = "final"
 
         elif self.phase == "final":
 
             size_diff = abs(p1.size - p2.size)
-            force = 5 + size_diff // 10
+            force = 10 + size_diff // 5
 
             if p1.size > p2.size:
                 p2.rect.x += force 
